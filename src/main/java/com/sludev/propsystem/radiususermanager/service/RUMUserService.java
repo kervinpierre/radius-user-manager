@@ -25,7 +25,9 @@ public interface RUMUserService
        // RUMUser validateCredential(String username, String password);
         List<RUMUser> findAllUsers();
 
-        RUMUser createUser(String username);
+    void updateUser(RUMUser user, Map<String, Object> model) throws RUMException;
+
+    RUMUser createUser(String username);
         RUMUser createUser(Map<String, Object> model) throws RUMException;
 
         RUMUser saveAndFlush(RUMUser RUMUser);

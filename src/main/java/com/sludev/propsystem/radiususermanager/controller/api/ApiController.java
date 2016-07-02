@@ -8,6 +8,7 @@ import com.sludev.propsystem.radiususermanager.service.RUMUserService;
 import com.sludev.propsystem.radiususermanager.util.LoggingUtils;
 import com.sludev.propsystem.radiususermanager.util.RUMException;
 import com.sludev.propsystem.radiususermanager.util.kendo.DatasourceVO;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -107,7 +109,39 @@ public final class ApiController
 
         RUMUser res = null;
 
-        // userService.getOne();
+        Object idObj = model.get("id");
+
+        if( idObj == null
+                || Objects.toString(idObj) == null
+                || StringUtils.isBlank(Objects.toString(idObj)) )
+        {
+            throw new RUMException("ID is missing.");
+        }
+
+        String idStr = Objects.toString(idObj);
+        UUID id = null;
+
+        try
+        {
+            id = UUID.fromString(idStr);
+        }
+        catch( Exception ex )
+        {
+            LOGGER.debug(String.format("Invalid UUID '%s'", idStr), ex);
+        }
+
+        res = userService.getOne(id);
+        if( res == null )
+        {
+            LOGGER.debug(String.format("User with ID not found '%s'", id));
+        }
+
+        userService.updateUser(res, model);
+        if( res != null )
+        {
+            userService.saveAndFlush(res);
+        }
+
 
         return res;
     }

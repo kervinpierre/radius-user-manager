@@ -72,13 +72,38 @@ public class RUMUserServiceImpl implements RUMUserService
 
         if( idObj != null
                 && Objects.toString(idObj) != null
-                && StringUtils.isNoneBlank(Objects.toString(idObj)))
+                && StringUtils.isNoneBlank(Objects.toString(idObj)) )
         {
             throw new RUMException(
                     String.format("ID should not be present '%s'",
-                                    model.get("id")));
+                            model.get("id")));
         }
 
+        updateUser(res, model);
+
+        return res;
+    }
+
+    public RUMUser updateUser(final Map<String, Object> model) throws RUMException
+    {
+        RUMUser res = null;
+
+        if( model == null )
+        {
+            return null;
+        }
+
+
+
+
+        updateUser(res, model);
+
+        return res;
+    }
+
+    @Override
+    public void updateUser(final RUMUser user, final Map<String, Object> model) throws RUMException
+    {
         Object usernameObj = model.get("username");
         Object passwordObj = model.get("password");
         Object emailObj    = model.get("email");
@@ -111,12 +136,12 @@ public class RUMUserServiceImpl implements RUMUserService
         String lastModifiedStr = null;
         DateTime lastModified = null;
 
-        username = StringUtils.trim(Objects.toString(usernameObj));
-        password = Objects.toString(passwordObj);
-        email    = StringUtils.trim(Objects.toString(emailObj));
-        locked   = BooleanUtils.toBoolean(Objects.toString(lockedObj));
+        username = StringUtils.trim(Objects.toString(usernameObj, null));
+        password = Objects.toString(passwordObj, null);
+        email    = StringUtils.trim(Objects.toString(emailObj, null));
+        locked   = BooleanUtils.toBoolean(Objects.toString(lockedObj, null));
 
-        lastSeenStr = Objects.toString(lastSeenObj);
+        lastSeenStr = Objects.toString(lastSeenObj, null);
         if( StringUtils.isNoneBlank(lastSeenStr) )
         {
             try
@@ -130,7 +155,7 @@ public class RUMUserServiceImpl implements RUMUserService
             }
         }
 
-        createdStr = Objects.toString(createdObj);
+        createdStr = Objects.toString(createdObj, null);
         if( StringUtils.isNoneBlank(createdStr) )
         {
             try
@@ -144,11 +169,11 @@ public class RUMUserServiceImpl implements RUMUserService
             }
         }
 
-        firstName = StringUtils.trim(Objects.toString(firstNameObj));
-        lastName = StringUtils.trim(Objects.toString(lastNameObj));
-        mainGroup = StringUtils.trim(Objects.toString(mainGroupObj));
+        firstName = StringUtils.trim(Objects.toString(firstNameObj, null));
+        lastName = StringUtils.trim(Objects.toString(lastNameObj, null));
+        mainGroup = StringUtils.trim(Objects.toString(mainGroupObj, null));
 
-        statusStr = Objects.toString(statusObj);
+        statusStr = Objects.toString(statusObj, null);
         if( StringUtils.isNoneBlank(statusStr) )
         {
             try
@@ -161,10 +186,10 @@ public class RUMUserServiceImpl implements RUMUserService
             }
         }
 
-        enabled   = BooleanUtils.toBoolean(Objects.toString(enabledObj));
-        canLogin  = BooleanUtils.toBoolean(Objects.toString(canLoginObj));
+        enabled   = BooleanUtils.toBoolean(Objects.toString(enabledObj, null));
+        canLogin  = BooleanUtils.toBoolean(Objects.toString(canLoginObj, null));
 
-        lastModifiedStr = Objects.toString(lastModifiedObj);
+        lastModifiedStr = Objects.toString(lastModifiedObj, null);
         if( StringUtils.isNoneBlank(lastModifiedStr) )
         {
             try
@@ -180,72 +205,70 @@ public class RUMUserServiceImpl implements RUMUserService
 
         if( StringUtils.isNoneBlank(username))
         {
-            res.setUsername(username);
+            user.setUsername(username);
         }
 
         if( StringUtils.isNoneBlank(password))
         {
-            res.setPassword(password);
+            user.setPassword(password);
         }
 
         if( StringUtils.isNoneBlank(email))
         {
-            res.setEmail(email);
+            user.setEmail(email);
         }
 
         if( locked != null )
         {
-            res.setLocked(locked);
+            user.setLocked(locked);
         }
 
         if( lastSeen != null )
         {
-            res.setLastSeen(lastSeen);
+            user.setLastSeen(lastSeen);
         }
 
         if( created != null )
         {
-            res.setCreatedDate(created);
+            user.setCreatedDate(created);
         }
 
         if( StringUtils.isNoneBlank(firstName) )
         {
-            res.setFirstName(firstName);
+            user.setFirstName(firstName);
         }
 
         if( StringUtils.isNoneBlank(lastName) )
         {
-            res.setLastName(lastName);
+            user.setLastName(lastName);
         }
 
         if( StringUtils.isNoneBlank(mainGroup) )
         {
-            res.setMainGroup(mainGroup);
+            user.setMainGroup(mainGroup);
         }
 
         if( status != null )
         {
-            res.setStatus(status);
+            user.setStatus(status);
         }
 
         if( enabled != null )
         {
-            res.setEnabled(enabled);
+            user.setEnabled(enabled);
         }
 
         if( canLogin != null )
         {
-            res.setCanLogin(canLogin);
+            user.setCanLogin(canLogin);
         }
 
         if( lastModified != null )
         {
-            res.setLastModifiedDate(lastModified);
+            user.setLastModifiedDate(lastModified);
         }
 
-        res.setAccountExpired(false);
-
-        return res;
+        user.setAccountExpired(false);
     }
 
     @Override

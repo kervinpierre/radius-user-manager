@@ -24,7 +24,7 @@
         <kendo:grid name="grid" pageable="true" sortable="true" height="550px" >
             <kendo:grid-editable mode="inline" confirmation="Are you sure you want to remove this item?"/>
             <kendo:grid-toolbar>
-                <kendo:grid-toolbarItem name="create"/>
+                <kendo:grid-toolbarItem name="create" />
             </kendo:grid-toolbar>
             <kendo:grid-columns>
                 <kendo:grid-column title="ID" field="id"  width="120px" />
@@ -63,7 +63,7 @@
                     </kendo:dataSource-transport-parameterMap>
                 </kendo:dataSource-transport>
                 <kendo:dataSource-schema  data="data" total="total" >
-                    <kendo:dataSource-schema-model>
+                    <kendo:dataSource-schema-model id="id">
                         <kendo:dataSource-schema-model-fields>
 
                             <kendo:dataSource-schema-model-field name="username" type="string">

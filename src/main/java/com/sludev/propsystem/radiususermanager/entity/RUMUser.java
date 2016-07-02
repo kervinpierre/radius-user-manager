@@ -1,5 +1,6 @@
 package com.sludev.propsystem.radiususermanager.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +40,8 @@ import java.util.UUID;
  */
 @Entity
 @Audited
+// BUGFIX : http://stackoverflow.com/questions/24994440/no-serializer-found-for-class-org-hibernate-proxy-pojo-javassist-javassist
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "rum_user", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 public class RUMUser
         implements UserDetails, Auditable<RUMUser, UUID>
