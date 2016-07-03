@@ -5,6 +5,7 @@ import com.sludev.propsystem.radiususermanager.entity.AdminConfig;
 import com.sludev.propsystem.radiususermanager.entity.RUMUser;
 import com.sludev.propsystem.radiususermanager.service.AdminConfigService;
 import com.sludev.propsystem.radiususermanager.service.RUMUserService;
+import com.sludev.propsystem.radiususermanager.service.impl.RUMUserPassword;
 import com.sludev.propsystem.radiususermanager.util.LoggingUtils;
 import com.sludev.propsystem.radiususermanager.util.RUMException;
 import com.sludev.propsystem.radiususermanager.util.kendo.DatasourceVO;
@@ -147,8 +148,64 @@ public final class ApiController
     }
 
     @ResponseBody
+    @RequestMapping(value = "/api/change-pass", method = RequestMethod.POST)
+    public Boolean changePass(HttpServletRequest request,
+                              @RequestBody Map<String, Object> model) throws RUMException
+    {
+        Boolean res = false;
+
+        Object passObj = model.get("p1");
+        if( passObj == null )
+        {
+            return false;
+        }
+
+        String pass = passObj.toString();
+        if( StringUtils.isBlank(pass))
+        {
+            return false;
+        }
+
+        Object idObj = model.get("idIn");
+        if( idObj == null )
+        {
+            return false;
+        }
+
+        String id = idObj.toString();
+        if( StringUtils.isBlank(id))
+        {
+            return false;
+        }
+
+        UUID uid = null;
+
+        try
+        {
+            uid = UUID.fromString(id);
+        }
+        catch( Exception ex )
+        {
+            LOGGER.debug(String.format("Invalid UUID '%s'", id));
+            return false;
+        }
+
+        RUMUser currUser = userService.getOne(uid);
+        if( currUser == null )
+        {
+            LOGGER.debug(String.format("User with ID not found '%s'", uid));
+        }
+
+        RUMUserPassword up = new RUMUserPassword();
+        up.changePassword(currUser, pass);
+        userService.saveAndFlush(currUser);
+
+        return true;
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/api/create-user", method = RequestMethod.POST)
-    public RUMUser CreateUser(HttpServletRequest request,
+    public RUMUser createUser(HttpServletRequest request,
                                    @RequestBody Map<String, Object> model) throws RUMException
     {
         LoggingUtils.logRequestDebug(request);
