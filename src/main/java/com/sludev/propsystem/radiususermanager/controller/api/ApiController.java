@@ -61,7 +61,7 @@ public final class ApiController
 
     @ResponseBody
     @RequestMapping(value = "/api/read-admin-config", method = RequestMethod.POST)
-    public DatasourceVO ReadAdminConfig(HttpServletRequest request)
+    public DatasourceVO readAdminConfig(HttpServletRequest request)
     {
         LoggingUtils.logRequestDebug(request);
 
@@ -78,7 +78,7 @@ public final class ApiController
 
     @ResponseBody
     @RequestMapping(value = "/api/read-all-users", method = RequestMethod.POST)
-    public DatasourceVO ReadAllUsers(HttpServletRequest request)
+    public DatasourceVO readAllUsers(HttpServletRequest request)
     {
         LoggingUtils.logRequestDebug(request);
 
@@ -97,7 +97,7 @@ public final class ApiController
 
     @ResponseBody
     @RequestMapping(value = "/api/update-user", method = RequestMethod.POST)
-    public RUMUser UpdateUser(HttpServletRequest request,
+    public RUMUser updateUser(HttpServletRequest request,
                                    @RequestBody Map<String, Object> model) throws RUMException
     {
         LoggingUtils.logRequestDebug(request);
@@ -166,7 +166,7 @@ public final class ApiController
             return false;
         }
 
-        Object idObj = model.get("idIn");
+        Object idObj = model.get("id");
         if( idObj == null )
         {
             return false;

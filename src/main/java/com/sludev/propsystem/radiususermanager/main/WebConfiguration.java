@@ -3,6 +3,7 @@ package com.sludev.propsystem.radiususermanager.main;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,10 @@ public class WebConfiguration extends WebMvcConfigurerAdapter
     {
         final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         final ObjectMapper objectMapper = new ObjectMapper();
+
+        objectMapper.registerModule(new JodaModule());
+        objectMapper.configure(com.fasterxml.jackson.databind.SerializationFeature.
+                WRITE_DATES_AS_TIMESTAMPS , false);
 
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);

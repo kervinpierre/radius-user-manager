@@ -107,16 +107,21 @@ public class RUMUserServiceImpl implements RUMUserService
         Object usernameObj = model.get("username");
         Object passwordObj = model.get("password");
         Object emailObj    = model.get("email");
-        Object lockedObj   = model.get("locked");
         Object lastSeenObj = model.get("lastSeen");
-        Object createdObj  = model.get("created");
+        Object createdObj  = model.get("createdDate");
         Object firstNameObj    = model.get("firstName");
         Object lastNameObj     = model.get("lastName");
         Object mainGroupObj    = model.get("mainGroup");
         Object statusObj       = model.get("status");
         Object enabledObj      = model.get("enabled");
         Object canLoginObj     = model.get("canLogin");
+        Object lockedObj       = model.get("locked");
         Object lastModifiedObj = model.get("lastModified");
+        Object accountNonLockedObj     = model.get("accountNonLocked");
+        Object accountNonExpiredObj    = model.get("accountNonExpired");
+        Object accountExpiredObj       = model.get("accountExpired");
+        Object credentialsNonExpiredObj= model.get("credentialsNonExpired");
+        Object credentialsExpiredObj   = model.get("credentialsExpired");
 
         String username = null;
         String password = null;
@@ -133,6 +138,11 @@ public class RUMUserServiceImpl implements RUMUserService
         Integer status = null;
         Boolean enabled = null;
         Boolean canLogin = null;
+        Boolean accountNonLocked = null;
+        Boolean accountNonExpired = null;
+        Boolean accountExpired = null;
+        Boolean credentialsNonExpired = null;
+        Boolean credentialsExpired = null;
         String lastModifiedStr = null;
         DateTime lastModified = null;
 
@@ -188,6 +198,11 @@ public class RUMUserServiceImpl implements RUMUserService
 
         enabled   = BooleanUtils.toBoolean(Objects.toString(enabledObj, null));
         canLogin  = BooleanUtils.toBoolean(Objects.toString(canLoginObj, null));
+        accountNonLocked   = BooleanUtils.toBoolean(Objects.toString(accountNonLockedObj, null));
+        accountNonExpired  = BooleanUtils.toBoolean(Objects.toString(accountNonExpiredObj, null));
+        accountExpired     = BooleanUtils.toBoolean(Objects.toString(accountExpiredObj, null));
+        credentialsNonExpired  = BooleanUtils.toBoolean(Objects.toString(credentialsNonExpiredObj, null));
+        credentialsExpired     = BooleanUtils.toBoolean(Objects.toString(credentialsExpiredObj, null));
 
         lastModifiedStr = Objects.toString(lastModifiedObj, null);
         if( StringUtils.isNoneBlank(lastModifiedStr) )
@@ -261,6 +276,31 @@ public class RUMUserServiceImpl implements RUMUserService
         if( canLogin != null )
         {
             user.setCanLogin(canLogin);
+        }
+
+        if( accountNonLocked != null )
+        {
+            user.setAccountNonLocked(accountNonLocked);
+        }
+
+        if( accountNonExpired != null )
+        {
+            user.setAccountNonExpired(accountNonExpired);
+        }
+
+        if( accountExpired != null )
+        {
+            user.setAccountExpired(accountExpired);
+        }
+
+        if( credentialsNonExpired != null )
+        {
+            user.setCredentialsNonExpired(credentialsNonExpired);
+        }
+
+        if( credentialsExpired != null )
+        {
+            user.setCredExpired(credentialsExpired);
         }
 
         if( lastModified != null )

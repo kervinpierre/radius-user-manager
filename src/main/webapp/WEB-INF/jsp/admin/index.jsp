@@ -100,8 +100,13 @@
                 <kendo:grid-column title="Enabled" field="enabled" width="120px"/>
                 <kendo:grid-column title="Can Login" field="canLogin" width="120px"/>
                 <kendo:grid-column title="Is Locked" field="locked" width="120px"/>
+                <kendo:grid-column title="Acc. Non-Locked" field="accountNonLocked" width="120px"/>
+                <kendo:grid-column title="Acc. Non-Expired" field="accountNonExpired" width="120px"/>
+                <kendo:grid-column title="Acc. Expired" field="accountExpired" width="120px"/>
+                <kendo:grid-column title="Cred. Non-Expired" field="credentialsNonExpired" width="120px"/>
+                <kendo:grid-column title="Cred. Expired" field="credentialsExpired" width="120px"/>
                 <kendo:grid-column title="Last Seen" field="lastSeen" width="120px"/>
-                <kendo:grid-column title="Created" field="created" width="120px"/>
+                <kendo:grid-column title="Created" field="createdDate" width="120px"/>
                 <kendo:grid-column title="Last Modified" field="lastModified" width="120px"/>
             </kendo:grid-columns>
             <kendo:dataSource  pageSize="2" serverPaging="true" serverSorting="true" serverFiltering="true" serverGrouping="true">
@@ -140,14 +145,19 @@
                             <kendo:dataSource-schema-model-field name="status" type="string">
                             </kendo:dataSource-schema-model-field>
 
-                            <kendo:dataSource-schema-model-field name="enabled" type="boolean" />
+                            <kendo:dataSource-schema-model-field name="enabled"  type="boolean" />
                             <kendo:dataSource-schema-model-field name="canLogin" type="boolean" />
-                            <kendo:dataSource-schema-model-field name="locked" type="boolean" />
+                            <kendo:dataSource-schema-model-field name="locked"   type="boolean" />
+                            <kendo:dataSource-schema-model-field name="accountNonLocked"  type="boolean" />
+                            <kendo:dataSource-schema-model-field name="accountNonExpired" type="boolean" />
+                            <kendo:dataSource-schema-model-field name="accountExpired"    type="boolean" />
+                            <kendo:dataSource-schema-model-field name="credentialsNonExpired" type="boolean" />
+                            <kendo:dataSource-schema-model-field name="credentialsExpired"    type="boolean" />
 
                             <kendo:dataSource-schema-model-field name="lastSeen" type="date">
                             </kendo:dataSource-schema-model-field>
 
-                            <kendo:dataSource-schema-model-field name="created" type="date">
+                            <kendo:dataSource-schema-model-field name="createdDate" type="date">
                             </kendo:dataSource-schema-model-field>
 
                             <kendo:dataSource-schema-model-field name="lastModified" type="date">

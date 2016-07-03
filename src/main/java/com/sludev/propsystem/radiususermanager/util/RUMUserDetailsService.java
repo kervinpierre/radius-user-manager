@@ -5,6 +5,7 @@ import com.sludev.propsystem.radiususermanager.service.RUMUserService;
 import com.sludev.propsystem.radiususermanager.service.impl.RUMUserPassword;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -50,6 +51,7 @@ public final class RUMUserDetailsService implements UserDetailsService
         }
 
         user = userService.createUser("radmin");
+        user.setCreatedDate(DateTime.now());
         user.setAccountNonLocked(true);
         user.setAccountNonExpired(true);
         user.setAccountExpired(false);

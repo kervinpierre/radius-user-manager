@@ -204,6 +204,7 @@ public class RUMUser
     }
 
     @Column(name = "last_seen")
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     public DateTime getLastSeen()
     {
         return lastSeen;
@@ -310,6 +311,7 @@ public class RUMUser
     }
 
     @Column(name = "status_date")
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     public DateTime getStatusDate()
     {
         return statusDate;
@@ -511,6 +513,7 @@ public class RUMUser
      * @return
      */
     @Column(name = "create_date")
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Override
     public DateTime getCreatedDate()
     {
@@ -524,6 +527,7 @@ public class RUMUser
     }
 
     @Column(name = "last_modified_date")
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @Override
     public DateTime getLastModifiedDate()
     {
