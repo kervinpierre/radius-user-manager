@@ -7,7 +7,7 @@
 <c:url value="/api/read-all-users?${_csrf.parameterName}=${_csrf.token}" var="readUrl" />
 <c:url value="/api/create-user?${_csrf.parameterName}=${_csrf.token}" var="createUrl" />
 <c:url value="/api/update-user?${_csrf.parameterName}=${_csrf.token}" var="updateUrl" />
-<c:url value="/api/read-all-users" var="destroyUrl" />
+<c:url value="/api/delete-user?${_csrf.parameterName}=${_csrf.token}" var="destroyUrl" />
 <c:url value="/api/change-pass?${_csrf.parameterName}=${_csrf.token}" var="changePassUrl" />
 
 <!DOCTYPE html>
@@ -25,7 +25,9 @@
 
     <div>
         <kendo:grid name="grid" pageable="true" sortable="true" height="550px" >
-            <kendo:grid-editable mode="inline" confirmation="Are you sure you want to remove this item?"/>
+            <kendo:grid-editable mode="inline"  confirmation="handle_confirmation"
+                                 confirmDelete="confirmDelete"  cancelDelete="cancelDelete">
+            </kendo:grid-editable>
             <kendo:grid-toolbar>
                 <kendo:grid-toolbarItem name="create" />
             </kendo:grid-toolbar>
@@ -33,7 +35,7 @@
                 <kendo:grid-column title="&nbsp;" width="200px">
                     <kendo:grid-column-command>
                         <kendo:grid-column-commandItem name="edit" text="Edit" />
-                        <kendo:grid-column-commandItem name="destroy" text="Delete" />
+                        <kendo:grid-column-commandItem name="destroy" text="Delete"  />
                         <kendo:grid-column-commandItem name="password" text="Change Password">
                             <kendo:grid-column-commandItem-click>
                                 <script>
@@ -169,6 +171,13 @@
             </kendo:dataSource>
         </kendo:grid>
     </div>
+
+        <script>
+            function handle_confirmation(e)
+            {
+                alert("delete");
+            }
+        </script>
 
         <script type="text/x-kendo-template" id="psstemplate">
             <div id="pass-container">

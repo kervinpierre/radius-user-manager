@@ -204,6 +204,48 @@ public final class ApiController
     }
 
     @ResponseBody
+    @RequestMapping(value = "/api/delete-user", method = RequestMethod.POST)
+    public Boolean deleteUser(HttpServletRequest request,
+                              @RequestBody Map<String, Object> model) throws RUMException
+    {
+        LoggingUtils.logRequestDebug(request);
+
+        Boolean res = false;
+
+        Object idObj = model.get("id");
+
+        if( idObj == null
+                || Objects.toString(idObj) == null
+                || StringUtils.isBlank(Objects.toString(idObj)) )
+        {
+            throw new RUMException("ID is missing.");
+        }
+
+        String idStr = Objects.toString(idObj);
+        UUID id = null;
+
+        try
+        {
+            id = UUID.fromString(idStr);
+        }
+        catch( Exception ex )
+        {
+            LOGGER.debug(String.format("Invalid UUID '%s'", idStr), ex);
+        }
+
+        RUMUser currUser = userService.getOne(id);
+        if( currUser == null )
+        {
+            LOGGER.debug(String.format("User with ID not found '%s'", id));
+        }
+
+        userService.deleteUser(currUser);
+        userService.flush();
+
+        return true;
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/api/create-user", method = RequestMethod.POST)
     public RUMUser createUser(HttpServletRequest request,
                                    @RequestBody Map<String, Object> model) throws RUMException
