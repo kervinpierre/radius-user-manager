@@ -6,13 +6,15 @@ import com.sludev.propsystem.radiususermanager.service.RUMGrantedAuthorityServic
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 /**
  * Created by kervin on 2016-07-03.
  */
-public final class RUMGrantedAuthorityServiceImpl implements RUMGrantedAuthorityService
+@Service
+public class RUMGrantedAuthorityServiceImpl implements RUMGrantedAuthorityService
 {
     private static final Logger LOGGER = LogManager.getLogger(RUMGrantedAuthorityServiceImpl.class);
 

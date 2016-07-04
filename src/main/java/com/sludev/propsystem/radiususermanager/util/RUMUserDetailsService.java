@@ -70,7 +70,7 @@ public final class RUMUserDetailsService implements UserDetailsService
         user.setCredExpired(false);
 
         Set<RUMGrantedAuthority> authSet = new HashSet<>();
-        RUMGrantedAuthority auth = authService.createAuthority("ADMIN");
+        RUMGrantedAuthority auth = authService.createAuthority("ROLE_ADMIN");
         auth.setRumUser(user);
         authSet.add(auth);
         user.setUserAuthorities(authSet);

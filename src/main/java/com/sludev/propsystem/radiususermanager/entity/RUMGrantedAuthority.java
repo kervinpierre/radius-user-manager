@@ -1,5 +1,7 @@
 package com.sludev.propsystem.radiususermanager.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.annotations.GenericGenerator;
@@ -29,6 +31,7 @@ import java.util.UUID;
  */
 @Entity
 @Audited
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@rumGrantedAuthId")
 @Table(name = "rum_granted_authority")
 public class RUMGrantedAuthority  extends AbstractAuditable<RUMUser, UUID>
         implements GrantedAuthority
