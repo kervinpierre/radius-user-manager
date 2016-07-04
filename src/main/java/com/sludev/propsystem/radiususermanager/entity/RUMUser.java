@@ -68,6 +68,7 @@ public class RUMUser
     private boolean credNonExpired;
     private boolean locked = false;
     private boolean accountNonLocked = false;
+    private boolean radiusEnabled = false;
     private DateTime lastSeen;
     private DateTime created;
     private DateTime statusDate;
@@ -331,6 +332,18 @@ public class RUMUser
     public void setUType(int utype)
     {
         this.utype = utype;
+    }
+
+    @Column(name = "radius_enabled")
+    @Type(type = "numeric_boolean")
+    public boolean isRadiusEnabled()
+    {
+        return radiusEnabled;
+    }
+
+    public void setRadiusEnabled(boolean r)
+    {
+        radiusEnabled= r;
     }
 
     @Column(name = "account_non_expired")

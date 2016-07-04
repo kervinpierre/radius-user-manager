@@ -4,11 +4,11 @@
 <%@ taglib prefix="kendo" uri="http://www.kendoui.com/jsp/tags"%>
 <%@ page session="true"%>
 
-<c:url value="/api/read-all-users?${_csrf.parameterName}=${_csrf.token}" var="readUrl" />
-<c:url value="/api/create-user?${_csrf.parameterName}=${_csrf.token}" var="createUrl" />
-<c:url value="/api/update-user?${_csrf.parameterName}=${_csrf.token}" var="updateUrl" />
-<c:url value="/api/delete-user?${_csrf.parameterName}=${_csrf.token}" var="destroyUrl" />
-<c:url value="/api/change-pass?${_csrf.parameterName}=${_csrf.token}" var="changePassUrl" />
+<c:url value="/api/admin/read-all-users?${_csrf.parameterName}=${_csrf.token}" var="readUrl" />
+<c:url value="/api/admin/create-user?${_csrf.parameterName}=${_csrf.token}" var="createUrl" />
+<c:url value="/api/admin/update-user?${_csrf.parameterName}=${_csrf.token}" var="updateUrl" />
+<c:url value="/api/admin/delete-user?${_csrf.parameterName}=${_csrf.token}" var="destroyUrl" />
+<c:url value="/api/admin/change-pass?${_csrf.parameterName}=${_csrf.token}" var="changePassUrl" />
 
 <!DOCTYPE html>
 <html>
@@ -100,6 +100,7 @@
                 <kendo:grid-column title="Group" field="mainGroup" width="120px"/>
                 <kendo:grid-column title="Status" field="status" width="120px"/>
                 <kendo:grid-column title="Enabled" field="enabled" width="120px"/>
+                <kendo:grid-column title="Radius Enabled" field="radiusEnabled" width="120px"/>
                 <kendo:grid-column title="Can Login" field="canLogin" width="120px"/>
                 <kendo:grid-column title="Is Locked" field="locked" width="120px"/>
                 <kendo:grid-column title="Acc. Non-Locked" field="accountNonLocked" width="120px"/>
@@ -148,6 +149,7 @@
                             </kendo:dataSource-schema-model-field>
 
                             <kendo:dataSource-schema-model-field name="enabled"  type="boolean" />
+                            <kendo:dataSource-schema-model-field name="radiusEnabled"  type="boolean" />
                             <kendo:dataSource-schema-model-field name="canLogin" type="boolean" />
                             <kendo:dataSource-schema-model-field name="locked"   type="boolean" />
                             <kendo:dataSource-schema-model-field name="accountNonLocked"  type="boolean" />

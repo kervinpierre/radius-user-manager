@@ -1,4 +1,4 @@
-package com.sludev.propsystem.radiususermanager.controller.api;
+package com.sludev.propsystem.radiususermanager.controller.api.admin;
 
 import com.sludev.propsystem.radiususermanager.config.RUMAppProp;
 import com.sludev.propsystem.radiususermanager.entity.AdminConfig;
@@ -28,10 +28,10 @@ import java.util.UUID;
 /**
  * Created by kervin on 2016-06-23.
  */
-@Controller("/api")
-public final class ApiController
+@Controller("/api/admin")
+public final class ApiAdminController
 {
-    private static final Logger LOGGER = LogManager.getLogger(ApiController.class);
+    private static final Logger LOGGER = LogManager.getLogger(ApiAdminController.class);
 
     @Autowired
     private RUMAppProp appProps;
@@ -43,7 +43,7 @@ public final class ApiController
     private RUMUserService userService;
 
     @ResponseBody
-    @RequestMapping(value = "/api/admin-config/", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/admin-config/", method = RequestMethod.GET)
     public DatasourceVO adminConfigList(HttpServletRequest request)
     {
         LoggingUtils.logRequestDebug(request);
@@ -60,7 +60,7 @@ public final class ApiController
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/read-admin-config", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/admin/read-admin-config", method = RequestMethod.POST)
     public DatasourceVO readAdminConfig(HttpServletRequest request)
     {
         LoggingUtils.logRequestDebug(request);
@@ -77,7 +77,7 @@ public final class ApiController
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/read-all-users", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/admin/read-all-users", method = RequestMethod.POST)
     public DatasourceVO readAllUsers(HttpServletRequest request)
     {
         LoggingUtils.logRequestDebug(request);
@@ -96,7 +96,7 @@ public final class ApiController
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/update-user", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/admin/update-user", method = RequestMethod.POST)
     public RUMUser updateUser(HttpServletRequest request,
                                    @RequestBody Map<String, Object> model) throws RUMException
     {
@@ -148,7 +148,7 @@ public final class ApiController
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/change-pass", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/admin/change-pass", method = RequestMethod.POST)
     public Boolean changePass(HttpServletRequest request,
                               @RequestBody Map<String, Object> model) throws RUMException
     {
@@ -204,7 +204,7 @@ public final class ApiController
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/delete-user", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/admin/delete-user", method = RequestMethod.POST)
     public Boolean deleteUser(HttpServletRequest request,
                               @RequestBody Map<String, Object> model) throws RUMException
     {
@@ -246,7 +246,7 @@ public final class ApiController
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/create-user", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/admin/create-user", method = RequestMethod.POST)
     public RUMUser createUser(HttpServletRequest request,
                                    @RequestBody Map<String, Object> model) throws RUMException
     {
@@ -264,7 +264,7 @@ public final class ApiController
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/admin-config/first", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/admin-config/first", method = RequestMethod.GET)
     public AdminConfig adminConfigFirst(HttpServletRequest request)
     {
         LoggingUtils.logRequestDebug(request);
@@ -273,7 +273,7 @@ public final class ApiController
     }
 
     @ResponseBody
-    @RequestMapping(value = "/api/admin-config/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/admin/admin-config/{id}", method = RequestMethod.GET)
     public AdminConfig adminConfigByID(HttpServletRequest request,
                                        @PathVariable(value = "id")UUID id)
     {

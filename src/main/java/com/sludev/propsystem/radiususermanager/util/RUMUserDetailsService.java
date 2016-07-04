@@ -1,6 +1,8 @@
 package com.sludev.propsystem.radiususermanager.util;
 
+import com.sludev.propsystem.radiususermanager.entity.RUMGrantedAuthority;
 import com.sludev.propsystem.radiususermanager.entity.RUMUser;
+import com.sludev.propsystem.radiususermanager.service.RUMGrantedAuthorityService;
 import com.sludev.propsystem.radiususermanager.service.RUMUserService;
 import com.sludev.propsystem.radiususermanager.service.impl.RUMUserPassword;
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by kervin on 2016-04-30.
  */
@@ -22,6 +27,9 @@ public final class RUMUserDetailsService implements UserDetailsService
 
     @Autowired(required = true)
     private RUMUserService userService;
+
+    @Autowired(required = true)
+    private RUMGrantedAuthorityService authService;
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException
@@ -61,12 +69,19 @@ public final class RUMUserDetailsService implements UserDetailsService
         user.setCredentialsNonExpired(true);
         user.setCredExpired(false);
 
+        Set<RUMGrantedAuthority> authSet = new HashSet<>();
+        RUMGrantedAuthority auth = authService.createAuthority("ADMIN");
+        auth.setRumUser(user);
+        authSet.add(auth);
+        user.setUserAuthorities(authSet);
+
         RUMUserPassword up = new RUMUserPassword();
         String pass = "test"; // up.generatePassword(user);
         up.changePassword(user, "test");
 
         LOGGER.info(String.format("Generated secret : '%s'", pass));
 
+        authService.saveAndFlush(auth);
         userService.saveAndFlush(user);
     }
 

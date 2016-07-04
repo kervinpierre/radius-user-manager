@@ -114,6 +114,7 @@ public class RUMUserServiceImpl implements RUMUserService
         Object mainGroupObj    = model.get("mainGroup");
         Object statusObj       = model.get("status");
         Object enabledObj      = model.get("enabled");
+        Object radiusEnabledObj= model.get("radiusEnabled");
         Object canLoginObj     = model.get("canLogin");
         Object lockedObj       = model.get("locked");
         Object lastModifiedObj = model.get("lastModified");
@@ -137,6 +138,7 @@ public class RUMUserServiceImpl implements RUMUserService
         String statusStr = null;
         Integer status = null;
         Boolean enabled = null;
+        Boolean radiusEnabled = null;
         Boolean canLogin = null;
         Boolean accountNonLocked = null;
         Boolean accountNonExpired = null;
@@ -198,6 +200,7 @@ public class RUMUserServiceImpl implements RUMUserService
 
         enabled   = BooleanUtils.toBoolean(Objects.toString(enabledObj, null));
         canLogin  = BooleanUtils.toBoolean(Objects.toString(canLoginObj, null));
+        radiusEnabled      = BooleanUtils.toBoolean(Objects.toString(radiusEnabledObj, null));
         accountNonLocked   = BooleanUtils.toBoolean(Objects.toString(accountNonLockedObj, null));
         accountNonExpired  = BooleanUtils.toBoolean(Objects.toString(accountNonExpiredObj, null));
         accountExpired     = BooleanUtils.toBoolean(Objects.toString(accountExpiredObj, null));
@@ -271,6 +274,11 @@ public class RUMUserServiceImpl implements RUMUserService
         if( enabled != null )
         {
             user.setEnabled(enabled);
+        }
+
+        if( radiusEnabled != null )
+        {
+            user.setRadiusEnabled(radiusEnabled);
         }
 
         if( canLogin != null )
