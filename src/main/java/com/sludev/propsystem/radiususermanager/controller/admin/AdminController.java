@@ -49,6 +49,28 @@ public class AdminController
         return  new ModelAndView("admin/index", "command", currConf);
     }
 
+    @RequestMapping("/admin/radcheck")
+    public ModelAndView radCheck(HttpServletRequest request,
+                              @RequestParam(value = "saveButton", required = false) String savedStr,
+                              @ModelAttribute("AdminConfig")AdminConfig config,
+                              ModelMap model)
+    {
+        LoggingUtils.logRequestDebug(request);
+
+        AdminConfig currConf = config;
+        if( currConf == null )
+        {
+            currConf = new AdminConfig();
+        }
+
+        if( StringUtils.equals(savedStr, "saved") )
+        {
+            adminConfigService.saveAndFlush(currConf);
+        }
+
+        return  new ModelAndView("admin/radcheck", "command", currConf);
+    }
+
 //    /**
 //     * Save then redirect to filled form.
 //     *

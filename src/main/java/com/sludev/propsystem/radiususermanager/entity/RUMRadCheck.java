@@ -2,12 +2,12 @@ package com.sludev.propsystem.radiususermanager.entity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -29,57 +29,58 @@ public class RUMRadCheck
     private String value;
 
     @Id
-    @Column(name = "id", unique = true)
-    private int getId()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, columnDefinition = "INT(11) UNSIGNED")
+    public int getId()
     {
         return id;
     }
 
-    private void setId(int id)
+    public void setId(int id)
     {
         this.id = id;
     }
 
     @Column(name = "username")
-    private String getUsername()
+    public String getUsername()
     {
         return username;
     }
 
-    private void setUsername(String username)
+    public void setUsername(String username)
     {
         this.username = username;
     }
 
     @Column(name = "attribute")
-    private String getAttribute()
+    public String getAttribute()
     {
         return attribute;
     }
 
-    private void setAttribute(String attribute)
+    public void setAttribute(String attribute)
     {
         this.attribute = attribute;
     }
 
     @Column(name = "op")
-    private String getOp()
+    public String getOp()
     {
         return op;
     }
 
-    private void setOp(String op)
+    public void setOp(String op)
     {
         this.op = op;
     }
 
     @Column(name = "value")
-    private String getValue()
+    public String getValue()
     {
         return value;
     }
 
-    private void setValue(String value)
+    public void setValue(String value)
     {
         this.value = value;
     }

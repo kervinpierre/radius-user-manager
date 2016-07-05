@@ -4,11 +4,11 @@
 <%@ taglib prefix="kendo" uri="http://www.kendoui.com/jsp/tags"%>
 <%@ page session="true"%>
 
-<c:url value="/api/admin/read-all-users?${_csrf.parameterName}=${_csrf.token}" var="readUrl" />
-<c:url value="/api/admin/create-user?${_csrf.parameterName}=${_csrf.token}" var="createUrl" />
-<c:url value="/api/admin/update-user?${_csrf.parameterName}=${_csrf.token}" var="updateUrl" />
-<c:url value="/api/admin/delete-user?${_csrf.parameterName}=${_csrf.token}" var="destroyUrl" />
-<c:url value="/api/admin/change-pass?${_csrf.parameterName}=${_csrf.token}" var="changePassUrl" />
+<c:url value="/api/admin/read-all-users" var="readUrl" />
+<c:url value="/api/admin/create-user" var="createUrl" />
+<c:url value="/api/admin/update-user" var="updateUrl" />
+<c:url value="/api/admin/delete-user" var="destroyUrl" />
+<c:url value="/api/admin/change-pass" var="changePassUrl" />
 
 <!DOCTYPE html>
 <html>

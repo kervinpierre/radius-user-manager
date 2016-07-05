@@ -1,4 +1,7 @@
 
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
+
 <link href="<c:url value='/resources/css/web/kendo.common.min.css'/>" rel="stylesheet" />
 <link href="<c:url value='/resources/css/web/kendo.rtl.min.css'/>" rel="stylesheet" />
 <link href="<c:url value='/resources/css/web/kendo.default.min.css'/>" rel="stylesheet" />

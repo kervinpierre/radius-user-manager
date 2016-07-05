@@ -2,8 +2,10 @@ package com.sludev.propsystem.radiususermanager.controller.api.admin;
 
 import com.sludev.propsystem.radiususermanager.config.RUMAppProp;
 import com.sludev.propsystem.radiususermanager.entity.AdminConfig;
+import com.sludev.propsystem.radiususermanager.entity.RUMRadCheck;
 import com.sludev.propsystem.radiususermanager.entity.RUMUser;
 import com.sludev.propsystem.radiususermanager.service.AdminConfigService;
+import com.sludev.propsystem.radiususermanager.service.RUMRadCheckService;
 import com.sludev.propsystem.radiususermanager.service.RUMUserService;
 import com.sludev.propsystem.radiususermanager.service.impl.RUMUserPassword;
 import com.sludev.propsystem.radiususermanager.util.LoggingUtils;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Objects;
@@ -41,6 +44,9 @@ public final class ApiAdminController
 
     @Autowired
     private RUMUserService userService;
+
+    @Autowired
+    private RUMRadCheckService radCheckService;
 
     @ResponseBody
     @RequestMapping(value = "/api/admin/admin-config/", method = RequestMethod.GET)
@@ -96,17 +102,30 @@ public final class ApiAdminController
     }
 
     @ResponseBody
+    @RequestMapping(value = "/api/admin/read-all-radchecks", method = RequestMethod.POST)
+    public DatasourceVO readAllRadChecks(HttpServletRequest request)
+    {
+        LoggingUtils.logRequestDebug(request);
+
+        DatasourceVO res = DatasourceVO.from();
+
+        res.data = radCheckService.findAllRadCheck().toArray();
+        //res.setSchemaModelId("id");
+        res.total = res.data.length;
+        //res.pageSize = 2;
+        //res.serverPaging = true;
+
+        res.validate();
+
+        return res;
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/api/admin/update-user", method = RequestMethod.POST)
     public RUMUser updateUser(HttpServletRequest request,
                                    @RequestBody Map<String, Object> model) throws RUMException
     {
         LoggingUtils.logRequestDebug(request);
-
-        Object uuidObj = model.get("id");
-        if( uuidObj == null )
-        {
-            throw new RUMException("Missing ID in 'update-user'");
-        }
 
         RUMUser res = null;
 
@@ -143,6 +162,52 @@ public final class ApiAdminController
             userService.saveAndFlush(res);
         }
 
+
+        return res;
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/api/admin/update-radcheck", method = RequestMethod.POST)
+    public RUMRadCheck updateRadCheck(HttpServletRequest request,
+                              @RequestBody Map<String, Object> model) throws RUMException
+    {
+        LoggingUtils.logRequestDebug(request);
+
+        RUMRadCheck res = null;
+
+        Object idObj = model.get("id");
+
+        if( idObj == null
+                || Objects.toString(idObj) == null
+                || StringUtils.isBlank(Objects.toString(idObj)) )
+        {
+            throw new RUMException("ID is missing.");
+        }
+
+        String idStr = Objects.toString(idObj);
+        Integer id = null;
+
+        try
+        {
+            id = Integer.parseInt(idStr);
+        }
+        catch( Exception ex )
+        {
+            LOGGER.debug(String.format("Invalid Integer '%s'", idStr), ex);
+        }
+
+        res = radCheckService.getOne(id);
+        if( res == null )
+        {
+            LOGGER.debug(String.format("RadCheck with ID not found '%s'", id));
+        }
+
+        radCheckService.updateRadCheck(res, model);
+        if( res != null )
+        {
+            radCheckService.saveAndFlush(res);
+        }
 
         return res;
     }
@@ -246,6 +311,48 @@ public final class ApiAdminController
     }
 
     @ResponseBody
+    @RequestMapping(value = "/api/admin/delete-radcheck", method = RequestMethod.POST)
+    public Boolean deleteRadCheck(HttpServletRequest request,
+                              @RequestBody Map<String, Object> model) throws RUMException
+    {
+        LoggingUtils.logRequestDebug(request);
+
+        Boolean res = false;
+
+        Object idObj = model.get("id");
+
+        if( idObj == null
+                || Objects.toString(idObj) == null
+                || StringUtils.isBlank(Objects.toString(idObj)) )
+        {
+            throw new RUMException("ID is missing.");
+        }
+
+        String idStr = Objects.toString(idObj);
+        Integer id = null;
+
+        try
+        {
+            id = Integer.parseInt(idStr);
+        }
+        catch( Exception ex )
+        {
+            LOGGER.debug(String.format("Invalid Integer '%s'", idStr), ex);
+        }
+
+        RUMRadCheck currRadCheck = radCheckService.getOne(id);
+        if( currRadCheck == null )
+        {
+            LOGGER.debug(String.format("RadCheck with ID not found '%s'", id));
+        }
+
+        radCheckService.deleteRadCheck(currRadCheck);
+        radCheckService.flush();
+
+        return true;
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/api/admin/create-user", method = RequestMethod.POST)
     public RUMUser createUser(HttpServletRequest request,
                                    @RequestBody Map<String, Object> model) throws RUMException
@@ -258,6 +365,25 @@ public final class ApiAdminController
         if( res != null )
         {
             userService.saveAndFlush(res);
+        }
+
+        return res;
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/api/admin/create-radcheck", method = RequestMethod.POST)
+    public RUMRadCheck createRadCheck(HttpServletRequest request,
+                              @RequestBody Map<String, Object> model) throws RUMException
+    {
+        LoggingUtils.logRequestDebug(request);
+
+        RUMRadCheck res = null;
+
+        res = radCheckService.createRadCheck(model);
+        if( res != null )
+        {
+            radCheckService.saveAndFlush(res);
         }
 
         return res;
