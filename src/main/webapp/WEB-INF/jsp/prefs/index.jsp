@@ -32,14 +32,14 @@
         <div>
 
             <ul>
-                <li>must contains one digit from 0-9</li>
-                <li>must contains one lowercase characters</li>
-                <li>must contains one uppercase characters</li>
-                <li>must contains one special symbols in the list "@#$%!"</li>
-                <li>length at least 8 characters and maximum of 32</li>
+                <li>Must contains one digit from 0-9</li>
+                <li>Must contains one lowercase characters</li>
+                <li>Must contains one uppercase characters</li>
+                <li>Must contains one special symbols in the list "@#$%!"</li>
+                <li>Length at least 8 characters and maximum of 32</li>
             </ul>
         </div>
-        
+
     <div>
         <form method="POST" action="/prefs" onsubmit="return validateForm()">
             <div>Update Your Information</div>

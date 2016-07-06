@@ -23,7 +23,9 @@ import com.sludev.propsystem.radiususermanager.service.RUMRadCheckService;
 import com.sludev.propsystem.radiususermanager.service.RUMUserService;
 import com.sludev.propsystem.radiususermanager.util.RUMConstants;
 import com.sludev.propsystem.radiususermanager.util.RUMException;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -83,8 +85,11 @@ public class RUMUserPassword extends BCryptPasswordEncoder
 
             case "ssha-password":
                 {
-                    String salt = UUID.randomUUID().toString();
-                    currPass = DigestUtils.sha1Hex(currPass.concat(salt)).concat(salt);
+                    // Salted SHA1 with a random salt appended
+                    String salt = UUID.randomUUID().toString().replaceAll("-", "");
+                    currPass = Base64.encodeBase64String(ArrayUtils.addAll(
+                                                DigestUtils.sha1(currPass.concat(salt)),
+                                                    salt.getBytes()));
                 }
                 break;
 
@@ -113,7 +118,7 @@ public class RUMUserPassword extends BCryptPasswordEncoder
             Matcher matcher = Pattern.compile(RUMConstants.PASSWORD_REGEX).matcher(pass);
             if( matcher.matches() == false )
             {
-                throw new RUMException(String.format("Password '%s' is in valid", pass));
+                throw new RUMException(String.format("Password '%s' is invalid", pass));
             }
         }
 

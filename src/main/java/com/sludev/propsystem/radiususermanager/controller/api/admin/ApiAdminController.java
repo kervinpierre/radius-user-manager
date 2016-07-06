@@ -163,10 +163,8 @@ public final class ApiAdminController
             userService.saveAndFlush(res);
         }
 
-
         return res;
     }
-
 
     @ResponseBody
     @RequestMapping(value = "/api/admin/update-radcheck", method = RequestMethod.POST)

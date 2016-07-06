@@ -69,6 +69,12 @@
                                                     return;
                                                 }
 
+                                                if(/^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!]).{8,32})$/.test(p1)==false)
+                                                {
+                                                    alert("Sorry password does not meet complexity requirements\nMust contains one digit from 0-9\nMust contains one lowercase characters\nMust contains one uppercase characters\nMust contains one special symbols in the list '@#$%!'\nLength at least 8 characters and maximum of 32");
+                                                    return;
+                                                }
+
                                                 var sendData = {};
                                                 sendData.p1 = p1;
                                                 sendData.id = idIn;

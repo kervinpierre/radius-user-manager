@@ -17,7 +17,7 @@ public final class RUMAppProp
     @Value("${rum.ignore-ssl-errors:false}")
     private Boolean rumIgnoreSSLErrors;
 
-    @Value("${rum.password.hash}")
+    @Value("${rum.password.hash:}")
     private String rumPasswordHashStr;
 
     public Boolean getRumIgnoreSSLErrors()
