@@ -11,6 +11,7 @@ import com.sludev.propsystem.radiususermanager.service.impl.RUMUserPassword;
 import com.sludev.propsystem.radiususermanager.util.LoggingUtils;
 import com.sludev.propsystem.radiususermanager.util.RUMException;
 import com.sludev.propsystem.radiususermanager.util.kendo.DatasourceVO;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -258,12 +259,13 @@ public final class ApiAdminController
         RUMUser currUser = userService.getOne(uid);
         if( currUser == null )
         {
-            LOGGER.debug(String.format("User with ID not found '%s'", uid));
+            throw new RUMException(String.format("User with ID not found '%s'", uid));
         }
 
-        RUMUserPassword up = new RUMUserPassword();
-        up.changePassword(currUser, pass);
-        userService.saveAndFlush(currUser);
+        RUMUserPassword.changePassword(currUser, pass,
+                                        userService, radCheckService,
+                                        appProps.getRumPasswordHashStr(),
+                                        true);
 
         return true;
     }

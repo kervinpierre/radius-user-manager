@@ -14,20 +14,20 @@ public final class RUMAppProp
 {
     private static final Logger LOGGER = LogManager.getLogger(RUMAppProp.class);
 
-    @Value("${psys.phantomjs.ignore-ssl-errors:false}")
-    private Boolean phantomjsIgnoreSSLErrors;
+    @Value("${rum.ignore-ssl-errors:false}")
+    private Boolean rumIgnoreSSLErrors;
 
-    @Value("${psys.targets.wework.script.name:wework.js}")
-    private String phantomjsScriptNameStr;
+    @Value("${rum.password.hash}")
+    private String rumPasswordHashStr;
 
-    public Boolean getPhantomjsIgnoreSSLErrors()
+    public Boolean getRumIgnoreSSLErrors()
     {
-        return phantomjsIgnoreSSLErrors;
+        return rumIgnoreSSLErrors;
     }
 
-    public String getPhantomJSScriptNameStr()
+    public String getRumPasswordHashStr()
     {
-        return phantomjsScriptNameStr;
+        return rumPasswordHashStr;
     }
 
 }
