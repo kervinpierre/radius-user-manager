@@ -19,6 +19,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
@@ -103,6 +104,7 @@ public class RUMUserPasswordTest
     }
 
     @Test
+    @Ignore
     public void A001_changePassword() throws Exception
     {
         String username = UUID.randomUUID().toString();
@@ -115,6 +117,7 @@ public class RUMUserPasswordTest
     }
 
     @Test
+    @Ignore
     public void A002_changePassword() throws Exception
     {
         String salt = "salt";
