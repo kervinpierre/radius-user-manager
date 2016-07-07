@@ -16,6 +16,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -59,7 +63,7 @@ public final class ApiAdminController
 
         res.data = adminConfigService.findAll().toArray();
         res.setSchemaModelId("id");
-        res.total = res.data.length;
+        res.total = (long)res.data.length;
 
         res.validate();
 
@@ -76,7 +80,7 @@ public final class ApiAdminController
 
         res.data = adminConfigService.findAll().toArray();
         res.setSchemaModelId("id");
-        res.total = res.data.length;
+        res.total = (long)res.data.length;
 
         res.validate();
 
@@ -85,17 +89,100 @@ public final class ApiAdminController
 
     @ResponseBody
     @RequestMapping(value = "/api/admin/read-all-users", method = RequestMethod.POST)
-    public DatasourceVO readAllUsers(HttpServletRequest request)
+    public DatasourceVO readAllUsers(HttpServletRequest request,
+                                     @RequestBody Map<String, Object> model)
     {
         LoggingUtils.logRequestDebug(request);
 
         DatasourceVO res = DatasourceVO.from();
 
-        res.data = userService.findAllUsers().toArray();
-        //res.setSchemaModelId("id");
-        res.total = res.data.length;
-        //res.pageSize = 2;
-        //res.serverPaging = true;
+        Object takeObj = model.get("take");
+        Object skipObj = model.get("skip");
+        Object pageObj = model.get("page");
+        Object pageSizeObj = model.get("pageSize");
+
+        Object sortObj = model.get("sort");
+
+        Long take = null;
+        Long skip = null;
+        Integer page = null;
+        Integer pageSize = null;
+
+        Sort currSort = null;
+
+        ArrayList sortList = null;
+
+        if( sortObj != null )
+        {
+            sortList = (ArrayList)sortObj;
+            Object searchObj = sortList.get(0);
+            Map<String, Object> searchMap = (Map)searchObj;
+            Sort.Direction currDir
+                    = Sort.Direction.fromString(StringUtils.upperCase(
+                    searchMap.get("dir").toString()));
+            currSort = new Sort(currDir, searchMap.get("field").toString());
+        }
+
+        if( pageObj != null )
+        {
+            try
+            {
+                page = Integer.parseInt(pageObj.toString());
+            }
+            catch( Exception ex )
+            {
+                LOGGER.debug(String.format("Error parsing 'page' '%s'", pageObj), ex);
+            }
+        }
+
+        if( pageSizeObj != null )
+        {
+            try
+            {
+                pageSize = Integer.parseInt(pageSizeObj.toString());
+            }
+            catch( Exception ex )
+            {
+                LOGGER.debug(String.format("Error parsing 'pageSize' '%s'", pageSizeObj), ex);
+            }
+        }
+
+        if( takeObj != null )
+        {
+            try
+            {
+                take = Long.parseLong(takeObj.toString());
+            }
+            catch( Exception ex )
+            {
+                LOGGER.debug(String.format("Error parsing 'take' '%s'", takeObj), ex);
+            }
+        }
+
+        if( skipObj != null )
+        {
+            try
+            {
+                skip = Long.parseLong(skipObj.toString());
+            }
+            catch( Exception ex )
+            {
+                LOGGER.debug(String.format("Error parsing 'skip' '%s'", skipObj), ex);
+            }
+        }
+
+        if( page != null && pageSize != null )
+        {
+            PageRequest pr = new PageRequest(page-1, pageSize, currSort);
+            Page<RUMUser> currPage = userService.findAllUsers(pr);
+            res.data = currPage.getContent().toArray();
+            res.total = currPage.getTotalElements();
+        }
+        else
+        {
+            res.data = userService.findAllUsers().toArray();
+            res.total = (long)res.data.length;
+        }
 
         res.validate();
 
@@ -112,7 +199,7 @@ public final class ApiAdminController
 
         res.data = radCheckService.findAllRadCheck().toArray();
         //res.setSchemaModelId("id");
-        res.total = res.data.length;
+        res.total = (long)res.data.length;
         //res.pageSize = 2;
         //res.serverPaging = true;
 

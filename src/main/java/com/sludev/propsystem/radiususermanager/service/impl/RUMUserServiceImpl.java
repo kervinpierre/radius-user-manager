@@ -10,6 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,6 +55,12 @@ public class RUMUserServiceImpl implements RUMUserService
     public List<RUMUser> findAllUsers()
     {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Page<RUMUser> findAllUsers(Pageable pageable)
+    {
+        return userRepository.findAll(pageable);
     }
 
     @Override

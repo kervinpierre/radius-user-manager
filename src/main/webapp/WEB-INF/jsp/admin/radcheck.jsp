@@ -21,7 +21,7 @@
         </div>
 
     <div>
-        <kendo:grid name="grid" pageable="true" sortable="true" height="550px" >
+        <kendo:grid name="grid" pageable="true" sortable="true" height="900px" >
             <kendo:grid-editable mode="inline"  confirmation="handle_confirmation"
                                  confirmDelete="confirmDelete"  cancelDelete="cancelDelete">
             </kendo:grid-editable>
@@ -41,7 +41,7 @@
                 <kendo:grid-column title="Operation" field="op" width="120px"/>
                 <kendo:grid-column title="Value" field="value" width="120px"/>
             </kendo:grid-columns>
-            <kendo:dataSource  pageSize="2" serverPaging="true" serverSorting="true" serverFiltering="true" serverGrouping="true">
+            <kendo:dataSource  pageSize="5" serverPaging="true" serverSorting="true" serverFiltering="true" serverGrouping="true">
                 <kendo:dataSource-transport>
                     <kendo:dataSource-transport-create url="${createUrl}" dataType="json" type="POST" contentType="application/json" />
                     <kendo:dataSource-transport-read url="${readUrl}" dataType="json" type="POST" contentType="application/json"/>

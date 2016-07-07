@@ -10,7 +10,7 @@ public final class DatasourceVO
     public Object[] data;
     public Integer  page;
     public Integer  pageSize;
-    public Integer  total;
+    public Long  total;
     public Boolean  serverPaging;
     public DatasourceSchemaVO schema;
 

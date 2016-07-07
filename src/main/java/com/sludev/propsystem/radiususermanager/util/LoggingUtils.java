@@ -6,6 +6,7 @@ import org.springframework.http.HttpRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Map;
@@ -30,6 +31,17 @@ public final class LoggingUtils
             logStr.append(String.format("'%s' : '%s'\n", name,
                                         request.getHeader(name)));
         }
+
+//        try
+//        {
+//            logStr.append(String.format("\nData : '%s'",
+//                    request.getReader().lines().reduce("",
+//                            (accumulator, actual) -> accumulator + actual)));
+//        }
+//        catch( IOException ex )
+//        {
+//            logStr.append("\nData : <exception>");
+//        }
 
         enames = request.getParameterNames();
 

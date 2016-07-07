@@ -1,3 +1,5 @@
+<c:url value='/login' var="loginUrl" />
+
 <script>
     $(function () {
         var token = $("meta[name='_csrf']").attr("content");
@@ -38,7 +40,7 @@
 
         </c:when>
         <c:otherwise>
-            <a href="/login">Login</a>
+            <a href="${loginUrl}">Login</a>
         </c:otherwise>
     </c:choose>
 
