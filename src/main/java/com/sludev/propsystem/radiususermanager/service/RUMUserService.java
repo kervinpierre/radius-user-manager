@@ -4,6 +4,7 @@ import com.sludev.propsystem.radiususermanager.entity.RUMUser;
 import com.sludev.propsystem.radiususermanager.util.RUMException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,11 @@ public interface RUMUserService
 
     List<RUMUser> findAllUsers();
     Page<RUMUser> findAllUsers(Pageable pageable);
+    Page<RUMUser> findAllUsers(Specification<RUMUser> spec, Pageable pageable);
+
+    List<String> findAllUsernames();
+    List<String> findAllFirstnames();
+    List<String> findAllLastnames();
 
     void updateUser(RUMUser user, Map<String, Object> model) throws RUMException;
 

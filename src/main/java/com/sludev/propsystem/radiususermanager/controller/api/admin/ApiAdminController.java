@@ -10,6 +10,7 @@ import com.sludev.propsystem.radiususermanager.service.RUMUserService;
 import com.sludev.propsystem.radiususermanager.service.impl.RUMUserPassword;
 import com.sludev.propsystem.radiususermanager.util.LoggingUtils;
 import com.sludev.propsystem.radiususermanager.util.RUMException;
+import com.sludev.propsystem.radiususermanager.util.RUMUserSpecifications;
 import com.sludev.propsystem.radiususermanager.util.kendo.DatasourceVO;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +31,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -88,6 +92,28 @@ public final class ApiAdminController
     }
 
     @ResponseBody
+    @RequestMapping(value = "/api/admin/read-all-usernames", method = RequestMethod.GET)
+    public List<String> readAllUsernames(HttpServletRequest request)
+    {
+        LoggingUtils.logRequestDebug(request);
+
+        List<String> res = userService.findAllUsernames();
+
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/api/admin/read-all-firstnames", method = RequestMethod.GET)
+    public List<String> readAllFirstnames(HttpServletRequest request)
+    {
+        LoggingUtils.logRequestDebug(request);
+
+        List<String> res = userService.findAllUsernames();
+
+        return res;
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/api/admin/read-all-users", method = RequestMethod.POST)
     public DatasourceVO readAllUsers(HttpServletRequest request,
                                      @RequestBody Map<String, Object> model)
@@ -102,6 +128,7 @@ public final class ApiAdminController
         Object pageSizeObj = model.get("pageSize");
 
         Object sortObj = model.get("sort");
+        Object filterObj = model.get("filter");
 
         Long take = null;
         Long skip = null;
@@ -109,8 +136,36 @@ public final class ApiAdminController
         Integer pageSize = null;
 
         Sort currSort = null;
+        Sort currFilter = null;
 
         ArrayList sortList = null;
+
+        Map filterExprs = null;
+
+        Specification<RUMUser> currSpec = null;
+
+        if( filterObj != null )
+        {
+            filterExprs = (Map)filterObj;
+
+            String logic = (String)filterExprs.get("logic");
+            ArrayList filtersList = (ArrayList)filterExprs.get("filters");
+            List<String> opStack = Arrays.asList(new String[2*3]);
+
+            for( int i=0; i<filtersList.size(); i++ )
+            {
+                Object obj = filtersList.get(i);
+
+                opStack.set(i*3, ((Map)obj).get("field").toString());
+                opStack.set(i*3+1, ((Map)obj).get("operator").toString());
+                opStack.set(i*3+2, ((Map)obj).get("value").toString());
+            }
+
+            currSpec
+                    = RUMUserSpecifications.runUserFilterQuery(logic, opStack.get(0),
+                            opStack.get(1), opStack.get(2), opStack.get(3),
+                            opStack.get(4), opStack.get(5));
+        }
 
         if( sortObj != null )
         {
@@ -174,7 +229,17 @@ public final class ApiAdminController
         if( page != null && pageSize != null )
         {
             PageRequest pr = new PageRequest(page-1, pageSize, currSort);
-            Page<RUMUser> currPage = userService.findAllUsers(pr);
+            Page<RUMUser> currPage = null;
+
+            if( currSpec != null )
+            {
+                currPage = userService.findAllUsers(currSpec,pr);
+            }
+            else
+            {
+                currPage = userService.findAllUsers(pr);
+            }
+
             res.data = currPage.getContent().toArray();
             res.total = currPage.getTotalElements();
         }

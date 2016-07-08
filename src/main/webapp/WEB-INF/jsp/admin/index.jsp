@@ -10,6 +10,9 @@
 <c:url value="/api/admin/delete-user" var="destroyUrl" />
 <c:url value="/api/admin/change-pass" var="changePassUrl" />
 
+<c:url value="/api/admin/read-all-usernames" var="userNameUrl" />
+<c:url value="/api/admin/read-all-firstnames" var="firstNameUrl" />
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -24,7 +27,7 @@
         <div id="psspopup"></div>
 
     <div>
-        <kendo:grid name="grid" pageable="true" sortable="true" height="900px" >
+        <kendo:grid name="grid" pageable="true" sortable="true" filterable="true" height="900px" >
             <kendo:grid-editable mode="inline"  confirmation="handle_confirmation"
                                  confirmDelete="confirmDelete"  cancelDelete="cancelDelete">
             </kendo:grid-editable>
@@ -99,9 +102,45 @@
                     </kendo:grid-column-command>
                 </kendo:grid-column>
                 <kendo:grid-column title="ID" field="id"  width="120px" />
-                <kendo:grid-column title="Username" field="username" width="120px" />
+
+                <kendo:grid-column title="Username" field="username" width="120px">
+                    <kendo:grid-column-filterable>
+                        <kendo:grid-column-filterable-ui>
+                            <script>
+                                function userNameFilter(element) {
+                                    element.kendoAutoComplete({
+                                        dataSource: {
+                                            transport: {
+                                                read: "${userNameUrl}"
+                                            }
+                                        }
+                                    });
+                                }
+                            </script>
+                        </kendo:grid-column-filterable-ui>
+                    </kendo:grid-column-filterable>
+                </kendo:grid-column>
+
                 <kendo:grid-column title="Email" field="email" width="120px"/>
-                <kendo:grid-column title="First Name" field="firstName" width="120px"/>
+
+                <kendo:grid-column title="First Name" field="firstName" width="120px">
+                    <kendo:grid-column-filterable>
+                        <kendo:grid-column-filterable-ui>
+                            <script>
+                                function userNameFilter(element) {
+                                    element.kendoAutoComplete({
+                                        dataSource: {
+                                            transport: {
+                                                read: "${firstNameUrl}"
+                                            }
+                                        }
+                                    });
+                                }
+                            </script>
+                        </kendo:grid-column-filterable-ui>
+                    </kendo:grid-column-filterable>
+                </kendo:grid-column>
+
                 <kendo:grid-column title="Last Name" field="lastName" width="120px"/>
                 <kendo:grid-column title="Group" field="mainGroup" width="120px"/>
                 <kendo:grid-column title="Status" field="status" width="120px"/>

@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,9 +59,33 @@ public class RUMUserServiceImpl implements RUMUserService
     }
 
     @Override
+    public Page<RUMUser> findAllUsers(Specification<RUMUser> spec, Pageable pageable)
+    {
+        return userRepository.findAll(spec, pageable);
+    }
+
+    @Override
     public Page<RUMUser> findAllUsers(Pageable pageable)
     {
         return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<String> findAllUsernames()
+    {
+        return userRepository.findAllUsernames();
+    }
+
+    @Override
+    public List<String> findAllFirstnames()
+    {
+        return userRepository.findAllFirstnames();
+    }
+
+    @Override
+    public List<String> findAllLastnames()
+    {
+        return userRepository.findAllFirstnames();
     }
 
     @Override
