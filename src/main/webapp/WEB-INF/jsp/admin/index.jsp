@@ -1,113 +1,124 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="kendo" uri="http://www.kendoui.com/jsp/tags"%>
-<%@ page session="true"%>
+<%@ taglib prefix="kendo" uri="http://www.kendoui.com/jsp/tags" %>
+<%@ page session="true" %>
 
-<c:url value="/api/admin/read-all-users" var="readUrl" />
-<c:url value="/api/admin/create-user" var="createUrl" />
-<c:url value="/api/admin/update-user" var="updateUrl" />
-<c:url value="/api/admin/delete-user" var="destroyUrl" />
-<c:url value="/api/admin/change-pass" var="changePassUrl" />
+<c:url value="/api/admin/read-all-users" var="readUrl"/>
+<c:url value="/api/admin/create-user" var="createUrl"/>
+<c:url value="/api/admin/update-user" var="updateUrl"/>
+<c:url value="/api/admin/delete-user" var="destroyUrl"/>
+<c:url value="/api/admin/change-pass" var="changePassUrl"/>
 
-<c:url value="/api/admin/read-all-usernames" var="userNameUrl" />
-<c:url value="/api/admin/read-all-firstnames" var="firstNameUrl" />
+<c:url value="/api/admin/read-all-usernames" var="userNameUrl"/>
+<c:url value="/api/admin/read-all-firstnames" var="firstNameUrl"/>
+<c:url value="/api/admin/read-all-lastnames" var="lastNameUrl"/>
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <%@include file="../inc/htmlHead.jsp" %>
-    </head>
+<head>
+    <%@include file="../inc/htmlHead.jsp" %>
+</head>
 
-    <body>
-        <div>
-            <%@include file="../inc/topMenu.jsp" %>
-        </div>
+<body>
+<div>
+    <%@include file="../inc/topMenu.jsp" %>
+</div>
 
-        <div id="psspopup"></div>
+<div id="psspopup"></div>
 
-    <div>
-        <kendo:grid name="grid" pageable="true" sortable="true" filterable="true" height="900px" >
-            <kendo:grid-editable mode="inline"  confirmation="handle_confirmation"
-                                 confirmDelete="confirmDelete"  cancelDelete="cancelDelete">
-            </kendo:grid-editable>
-            <kendo:grid-toolbar>
-                <kendo:grid-toolbarItem name="create" />
-            </kendo:grid-toolbar>
-            <kendo:grid-columns>
-                <kendo:grid-column title="&nbsp;" width="200px">
-                    <kendo:grid-column-command>
-                        <kendo:grid-column-commandItem name="edit" text="Edit" />
-                        <kendo:grid-column-commandItem name="destroy" text="Delete"  />
-                        <kendo:grid-column-commandItem name="password" text="Change Password">
-                            <kendo:grid-column-commandItem-click>
-                                <script>
-                                    function(e)
-                                    {
-                                        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+<div>
+    <div id="adminUserGrid"></div>
+    <script>
+        jQuery(function ()
+        {
+            jQuery("#adminUserGrid")
+                    .kendoGrid({
+                        "toolbar": [{"name": "create"}],
+                        "filterable": true,
+                        "editable": {
+                            "mode": "inline",
+                           // "cancelDelete": "cancelDelete",
+                            "confirmation": true,
+                            "confirmDelete": "confirmDelete"
+                        },
+                        "columns": [{
+                            "width": "200px",
+                            "title": "&nbsp;",
+                            "command": [{"name": "edit", "text": "Edit"}, {"name": "destroy", "text": "Delete"}, {
+                                "name": "password", "text": "Change Password", "click": function (e)
+                                {
+                                    var dataItem = this.dataItem($(e.currentTarget)
+                                            .closest("tr"));
 
-                                        wnd = $("#psspopup")
-                                                .kendoWindow({
-                                                    title: "Change Password",
-                                                    modal: true,
-                                                    visible: false,
-                                                    resizable: false,
-                                                    width: 300
-                                                }).data("kendoWindow");
+                                    wnd = $("#psspopup")
+                                            .kendoWindow({
+                                                title: "Change Password",
+                                                modal: true,
+                                                visible: false,
+                                                resizable: false,
+                                                width: 300
+                                            })
+                                            .data("kendoWindow");
 
-                                        detailsTemplate = kendo.template($("#psstemplate").html());
-                                        wnd.content(detailsTemplate(dataItem));
-                                        wnd.center().open();
+                                    detailsTemplate = kendo.template($("#psstemplate")
+                                            .html());
+                                    wnd.content(detailsTemplate(dataItem));
+                                    wnd.center()
+                                            .open();
 
-                                        $("#changePass").kendoButton({
-                                            click: function(e) {
-                                                // $(e.event.target).closest(".k-button").attr("id")
-
-                                                var p1 = $("#p1").val();
-                                                var p2 = $("#p2").val();
-                                                var idIn = $("#idIn").val();
-
-                                                if( p1 != p2 ) {
-                                                    alert("Sorry password confirmation does not match");
-                                                    return;
-                                                }
-
-                                                if(/^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!]).{8,32})$/.test(p1)==false)
+                                    $("#changePass")
+                                            .kendoButton({
+                                                click: function (e)
                                                 {
-                                                    alert("Sorry password does not meet complexity requirements\nMust contains one digit from 0-9\nMust contains one lowercase characters\nMust contains one uppercase characters\nMust contains one special symbols in the list '@#$%!'\nLength at least 8 characters and maximum of 32");
-                                                    return;
-                                                }
+                                                    // $(e.event.target).closest(".k-button").attr("id")
 
-                                                var sendData = {};
-                                                sendData.p1 = p1;
-                                                sendData.id = idIn;
+                                                    var p1   = $("#p1")
+                                                            .val();
+                                                    var p2   = $("#p2")
+                                                            .val();
+                                                    var idIn = $("#idIn")
+                                                            .val();
 
-                                                $.ajax({ url: "${changePassUrl}",
+                                                    if (p1 != p2)
+                                                    {
+                                                        alert("Sorry password confirmation does not match");
+                                                        return;
+                                                    }
+
+                                                    if (/^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!]).{8,32})$/.test(p1) == false)
+                                                    {
+                                                        alert("Sorry password does not meet complexity requirements\nMust contains one digit from 0-9\nMust contains one lowercase characters\nMust contains one uppercase characters\nMust contains one special symbols in the list '@#$%!'\nLength at least 8 characters and maximum of 32");
+                                                        return;
+                                                    }
+
+                                                    var sendData = {};
+                                                    sendData.p1  = p1;
+                                                    sendData.id  = idIn;
+
+                                                    $.ajax({
+                                                        url: "${changePassUrl}",
                                                         method: "POST",
                                                         contentType: "application/json",
                                                         dataType: "json",
                                                         data: JSON.stringify(sendData),
-                                                        success:function(data) {
-                                                            if( data ) {
+                                                        success: function (data)
+                                                        {
+                                                            if (data)
+                                                            {
                                                                 alert("success!");
                                                             }
                                                             wnd.close();
-                                                        }});
-                                            }
-                                        });
-                                    }
-                                </script>
-                            </kendo:grid-column-commandItem-click>
-                        </kendo:grid-column-commandItem>
-                    </kendo:grid-column-command>
-                </kendo:grid-column>
-                <kendo:grid-column title="ID" field="id"  width="120px" />
-
-                <kendo:grid-column title="Username" field="username" width="120px">
-                    <kendo:grid-column-filterable>
-                        <kendo:grid-column-filterable-ui>
-                            <script>
-                                function userNameFilter(element) {
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                }
+                            }]
+                        }, {"field": "id", "width": "120px", "title": "ID"}, {
+                            "filterable": {
+                                "ui": function userNameFilter(element)
+                                {
                                     element.kendoAutoComplete({
                                         dataSource: {
                                             transport: {
@@ -116,18 +127,11 @@
                                         }
                                     });
                                 }
-                            </script>
-                        </kendo:grid-column-filterable-ui>
-                    </kendo:grid-column-filterable>
-                </kendo:grid-column>
-
-                <kendo:grid-column title="Email" field="email" width="120px"/>
-
-                <kendo:grid-column title="First Name" field="firstName" width="120px">
-                    <kendo:grid-column-filterable>
-                        <kendo:grid-column-filterable-ui>
-                            <script>
-                                function userNameFilter(element) {
+                            }, "field": "username", "width": "120px", "title": "Username"
+                        }, {"field": "email", "width": "120px", "title": "Email"}, {
+                            "filterable": {
+                                "ui": function firstNameFilter(element)
+                                {
                                     element.kendoAutoComplete({
                                         dataSource: {
                                             transport: {
@@ -136,107 +140,158 @@
                                         }
                                     });
                                 }
-                            </script>
-                        </kendo:grid-column-filterable-ui>
-                    </kendo:grid-column-filterable>
-                </kendo:grid-column>
-
-                <kendo:grid-column title="Last Name" field="lastName" width="120px"/>
-                <kendo:grid-column title="Group" field="mainGroup" width="120px"/>
-                <kendo:grid-column title="Status" field="status" width="120px"/>
-                <kendo:grid-column title="Enabled" field="enabled" width="120px"/>
-                <kendo:grid-column title="Radius Enabled" field="radiusEnabled" width="120px"/>
-                <kendo:grid-column title="Can Login" field="canLogin" width="120px"/>
-                <kendo:grid-column title="Is Locked" field="locked" width="120px"/>
-                <kendo:grid-column title="Acc. Non-Locked" field="accountNonLocked" width="120px"/>
-                <kendo:grid-column title="Acc. Non-Expired" field="accountNonExpired" width="120px"/>
-                <kendo:grid-column title="Acc. Expired" field="accountExpired" width="120px"/>
-                <kendo:grid-column title="Cred. Non-Expired" field="credentialsNonExpired" width="120px"/>
-                <kendo:grid-column title="Cred. Expired" field="credentialsExpired" width="120px"/>
-                <kendo:grid-column title="Last Seen" field="lastSeen" width="120px"/>
-                <kendo:grid-column title="Created" field="createdDate" width="120px"/>
-                <kendo:grid-column title="Last Modified" field="lastModified" width="120px"/>
-            </kendo:grid-columns>
-            <kendo:dataSource  pageSize="5" serverPaging="true" serverSorting="true" serverFiltering="true" serverGrouping="true">
-                <kendo:dataSource-transport>
-                    <kendo:dataSource-transport-create url="${createUrl}" dataType="json" type="POST" contentType="application/json" />
-                    <kendo:dataSource-transport-read url="${readUrl}" dataType="json" type="POST" contentType="application/json"/>
-                    <kendo:dataSource-transport-update url="${updateUrl}" dataType="json" type="POST" contentType="application/json" />
-                    <kendo:dataSource-transport-destroy url="${destroyUrl}" dataType="json" type="POST" contentType="application/json" />
-                    <kendo:dataSource-transport-parameterMap>
-                        <script>
-                            function parameterMap(options,type) {
-                                return JSON.stringify(options);
+                            }, "field": "firstName", "width": "120px", "title": "First Name"
+                        }, {
+                            "filterable": {
+                                "ui": function lastNameFilter(element)
+                                {
+                                    element.kendoAutoComplete({
+                                        dataSource: {
+                                            transport: {
+                                                read: "${lastNameUrl}"
+                                            }
+                                        }
+                                    });
+                                }
+                            }, "field": "lastName", "width": "120px", "title": "Last Name"
+                        }, {"field": "mainGroup", "width": "120px", "title": "Group"}, {
+                            "field": "status",
+                            "width": "120px",
+                            "title": "Status"
+                        }, {"field": "enabled", "width": "120px", "title": "Enabled"}, {
+                            "field": "radiusEnabled",
+                            "width": "120px",
+                            "title": "Radius Enabled"
+                        }, {"field": "canLogin", "width": "120px", "title": "Can Login"}, {
+                            "field": "locked",
+                            "width": "120px",
+                            "title": "Is Locked"
+                        }, {
+                            "field": "accountNonLocked",
+                            "width": "120px",
+                            "title": "Acc. Non-Locked"
+                        }, {
+                            "field": "accountNonExpired",
+                            "width": "120px",
+                            "title": "Acc. Non-Expired"
+                        }, {
+                            "field": "accountExpired",
+                            "width": "120px",
+                            "title": "Acc. Expired"
+                        }, {
+                            "field": "credentialsNonExpired",
+                            "width": "120px",
+                            "title": "Cred. Non-Expired"
+                        }, {
+                            "field": "credentialsExpired",
+                            "width": "120px",
+                            "title": "Cred. Expired"
+                        }, {"field": "lastSeen", "width": "120px", "title": "Last Seen"}, {
+                            "field": "createdDate",
+                            "width": "120px",
+                            "title": "Created"
+                        }, {"field": "lastModified", "width": "120px", "title": "Last Modified"}],
+                        "pageable": true,
+                        "sortable": true,
+                        "dataSource": {
+                            "serverPaging": true,
+                            "schema": {
+                                "total": "total",
+                                "data": "data",
+                                "model": {
+                                    "id": "id",
+                                    "fields": {
+                                        "lastName": {"type": "string"},
+                                        "credentialsNonExpired": {"type": "boolean"},
+                                        "enabled": {"type": "boolean"},
+                                        "mainGroup": {"type": "string"},
+                                        "firstName": {"type": "string"},
+                                        "canLogin": {"type": "boolean"},
+                                        "lastSeen": {"type": "date"},
+                                        "createdDate": {"type": "date"},
+                                        "accountExpired": {"type": "boolean"},
+                                        "accountNonExpired": {"type": "boolean"},
+                                        "lastModified": {"type": "date"},
+                                        "radiusEnabled": {"type": "boolean"},
+                                        "locked": {"type": "boolean"},
+                                        "credentialsExpired": {"type": "boolean"},
+                                        "email": {"type": "string"},
+                                        "username": {"type": "string"},
+                                        "status": {"type": "string"},
+                                        "accountNonLocked": {"type": "boolean"}
+                                    }
+                                }
+                            },
+                            "serverFiltering": true,
+                            "serverGrouping": true,
+                            "serverSorting": true,
+                            "pageSize": 5.0,
+                            "transport": {
+                                "read": {
+                                    "dataType": "json",
+                                    "type": "POST",
+                                    "contentType": "application/json",
+                                    "url": "${readUrl}"
+                                },
+                                "create": {
+                                    "dataType": "json",
+                                    "type": "POST",
+                                    "contentType": "application/json",
+                                    "url": "${createUrl}",
+                                    "complete": function(e) {
+                                        $("#adminUserGrid").data("kendoGrid").dataSource.read();
+                                    }},
+                                "update": {
+                                    "dataType": "json",
+                                    "type": "POST",
+                                    "contentType": "application/json",
+                                    "url": "${updateUrl}"
+                                },
+                                "destroy": {
+                                    "dataType": "json",
+                                    "type": "POST",
+                                    "contentType": "application/json",
+                                    "url": "${destroyUrl}"
+                                },
+                                "parameterMap": function parameterMap(options, type)
+                                {
+                                    return JSON.stringify(options);
+                                }
                             }
-                        </script>
-                    </kendo:dataSource-transport-parameterMap>
-                </kendo:dataSource-transport>
-                <kendo:dataSource-schema  data="data" total="total" >
-                    <kendo:dataSource-schema-model id="id">
-                        <kendo:dataSource-schema-model-fields>
+                        },
+                        "height": "900px"
+                    });
+        })</script>
+</div>
 
-                            <kendo:dataSource-schema-model-field name="username" type="string">
-                            </kendo:dataSource-schema-model-field>
+<script>
+    function handle_confirmation(e)
+    {
+        alert("delete");
+    }
 
-                            <kendo:dataSource-schema-model-field name="email" type="string">
-                            </kendo:dataSource-schema-model-field>
+    function handle_requestEnd(e)
+    {
+        $("#adminUserGrid")
+                .data("kendoGrid")
+                .dataSource
+                .read();
+    }
+</script>
 
-                            <kendo:dataSource-schema-model-field name="firstName" type="string">
-                            </kendo:dataSource-schema-model-field>
-
-                            <kendo:dataSource-schema-model-field name="lastName" type="string">
-                            </kendo:dataSource-schema-model-field>
-
-                            <kendo:dataSource-schema-model-field name="mainGroup" type="string">
-                            </kendo:dataSource-schema-model-field>
-
-                            <kendo:dataSource-schema-model-field name="status" type="string">
-                            </kendo:dataSource-schema-model-field>
-
-                            <kendo:dataSource-schema-model-field name="enabled"  type="boolean" />
-                            <kendo:dataSource-schema-model-field name="radiusEnabled"  type="boolean" />
-                            <kendo:dataSource-schema-model-field name="canLogin" type="boolean" />
-                            <kendo:dataSource-schema-model-field name="locked"   type="boolean" />
-                            <kendo:dataSource-schema-model-field name="accountNonLocked"  type="boolean" />
-                            <kendo:dataSource-schema-model-field name="accountNonExpired" type="boolean" />
-                            <kendo:dataSource-schema-model-field name="accountExpired"    type="boolean" />
-                            <kendo:dataSource-schema-model-field name="credentialsNonExpired" type="boolean" />
-                            <kendo:dataSource-schema-model-field name="credentialsExpired"    type="boolean" />
-
-                            <kendo:dataSource-schema-model-field name="lastSeen" type="date">
-                            </kendo:dataSource-schema-model-field>
-
-                            <kendo:dataSource-schema-model-field name="createdDate" type="date">
-                            </kendo:dataSource-schema-model-field>
-
-                            <kendo:dataSource-schema-model-field name="lastModified" type="date">
-                            </kendo:dataSource-schema-model-field>
-
-                        </kendo:dataSource-schema-model-fields>
-                    </kendo:dataSource-schema-model>
-                </kendo:dataSource-schema>
-            </kendo:dataSource>
-        </kendo:grid>
+<script type="text/x-kendo-template" id="psstemplate">
+    <div id="pass-container">
+        <dl>
+            <input id="idIn" type="hidden" value="#= id #"/>
+            <dt>Password : <input id="p1" type="password"/></dt>
+            <dt>Repeat : <input id="p2" type="password"/></dt>
+            <dt>
+                <button type="button" id="changePass">Save</button>
+            </dt>
+        </dl>
     </div>
+</script>
 
-        <script>
-            function handle_confirmation(e)
-            {
-                alert("delete");
-            }
-        </script>
-
-        <script type="text/x-kendo-template" id="psstemplate">
-            <div id="pass-container">
-                <dl>
-                    <input id="idIn" type="hidden" value="#= id #" />
-                    <dt>Password : <input id="p1" type="password"/></dt>
-                    <dt>Repeat   : <input id="p2" type="password"/></dt>
-                    <dt><button type="button" id="changePass">Save</button></dt>
-                </dl>
-            </div>
-        </script>
-
-    </body>
+</body>
 </html>
 
