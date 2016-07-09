@@ -10,6 +10,7 @@ import com.sludev.propsystem.radiususermanager.service.RUMUserService;
 import com.sludev.propsystem.radiususermanager.service.impl.RUMUserPassword;
 import com.sludev.propsystem.radiususermanager.util.LoggingUtils;
 import com.sludev.propsystem.radiususermanager.util.RUMException;
+import com.sludev.propsystem.radiususermanager.util.RUMRadCheckSpecifications;
 import com.sludev.propsystem.radiususermanager.util.RUMUserSpecifications;
 import com.sludev.propsystem.radiususermanager.util.kendo.DatasourceVO;
 import org.apache.commons.lang3.BooleanUtils;
@@ -103,12 +104,34 @@ public final class ApiAdminController
     }
 
     @ResponseBody
+    @RequestMapping(value = "/api/admin/read-all-radcheck-usernames", method = RequestMethod.GET)
+    public List<String> readAllRCUsernames(HttpServletRequest request)
+    {
+        LoggingUtils.logRequestDebug(request);
+
+        List<String> res = radCheckService.findAllUsernames();
+
+        return res;
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/api/admin/read-all-firstnames", method = RequestMethod.GET)
     public List<String> readAllFirstnames(HttpServletRequest request)
     {
         LoggingUtils.logRequestDebug(request);
 
         List<String> res = userService.findAllUsernames();
+
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/api/admin/read-all-lastnames", method = RequestMethod.GET)
+    public List<String> readAllLastnames(HttpServletRequest request)
+    {
+        LoggingUtils.logRequestDebug(request);
+
+        List<String> res = userService.findAllLastnames();
 
         return res;
     }
@@ -256,17 +279,139 @@ public final class ApiAdminController
 
     @ResponseBody
     @RequestMapping(value = "/api/admin/read-all-radchecks", method = RequestMethod.POST)
-    public DatasourceVO readAllRadChecks(HttpServletRequest request)
+    public DatasourceVO readAllRadChecks(HttpServletRequest request,
+                                         @RequestBody Map<String, Object> model)
     {
         LoggingUtils.logRequestDebug(request);
 
         DatasourceVO res = DatasourceVO.from();
 
-        res.data = radCheckService.findAllRadCheck().toArray();
-        //res.setSchemaModelId("id");
-        res.total = (long)res.data.length;
-        //res.pageSize = 2;
-        //res.serverPaging = true;
+        Object takeObj = model.get("take");
+        Object skipObj = model.get("skip");
+        Object pageObj = model.get("page");
+        Object pageSizeObj = model.get("pageSize");
+
+        Object sortObj = model.get("sort");
+        Object filterObj = model.get("filter");
+
+        Long take = null;
+        Long skip = null;
+        Integer page = null;
+        Integer pageSize = null;
+
+        Sort currSort = null;
+        Sort currFilter = null;
+
+        ArrayList sortList = null;
+
+        Map filterExprs = null;
+
+        Specification<RUMRadCheck> currSpec = null;
+
+        if( filterObj != null )
+        {
+            filterExprs = (Map)filterObj;
+
+            String logic = (String)filterExprs.get("logic");
+            ArrayList filtersList = (ArrayList)filterExprs.get("filters");
+            List<String> opStack = Arrays.asList(new String[2*3]);
+
+            for( int i=0; i<filtersList.size(); i++ )
+            {
+                Object obj = filtersList.get(i);
+
+                opStack.set(i*3, ((Map)obj).get("field").toString());
+                opStack.set(i*3+1, ((Map)obj).get("operator").toString());
+                opStack.set(i*3+2, ((Map)obj).get("value").toString());
+            }
+
+            currSpec
+                    = RUMRadCheckSpecifications.runRadCheckFilterQuery(logic, opStack.get(0),
+                    opStack.get(1), opStack.get(2), opStack.get(3),
+                    opStack.get(4), opStack.get(5));
+        }
+
+        if( sortObj != null )
+        {
+            sortList = (ArrayList)sortObj;
+            Object searchObj = sortList.get(0);
+            Map<String, Object> searchMap = (Map)searchObj;
+            Sort.Direction currDir
+                    = Sort.Direction.fromString(StringUtils.upperCase(
+                    searchMap.get("dir").toString()));
+            currSort = new Sort(currDir, searchMap.get("field").toString());
+        }
+
+        if( pageObj != null )
+        {
+            try
+            {
+                page = Integer.parseInt(pageObj.toString());
+            }
+            catch( Exception ex )
+            {
+                LOGGER.debug(String.format("Error parsing 'page' '%s'", pageObj), ex);
+            }
+        }
+
+        if( pageSizeObj != null )
+        {
+            try
+            {
+                pageSize = Integer.parseInt(pageSizeObj.toString());
+            }
+            catch( Exception ex )
+            {
+                LOGGER.debug(String.format("Error parsing 'pageSize' '%s'", pageSizeObj), ex);
+            }
+        }
+
+        if( takeObj != null )
+        {
+            try
+            {
+                take = Long.parseLong(takeObj.toString());
+            }
+            catch( Exception ex )
+            {
+                LOGGER.debug(String.format("Error parsing 'take' '%s'", takeObj), ex);
+            }
+        }
+
+        if( skipObj != null )
+        {
+            try
+            {
+                skip = Long.parseLong(skipObj.toString());
+            }
+            catch( Exception ex )
+            {
+                LOGGER.debug(String.format("Error parsing 'skip' '%s'", skipObj), ex);
+            }
+        }
+
+        if( page != null && pageSize != null )
+        {
+            PageRequest pr = new PageRequest(page-1, pageSize, currSort);
+            Page<RUMRadCheck> currPage = null;
+
+            if( currSpec != null )
+            {
+                currPage = radCheckService.findAllRadChecks(currSpec,pr);
+            }
+            else
+            {
+                currPage = radCheckService.findAllRadChecks(pr);
+            }
+
+            res.data = currPage.getContent().toArray();
+            res.total = currPage.getTotalElements();
+        }
+        else
+        {
+            res.data = radCheckService.findAllRadChecks().toArray();
+            res.total = (long)res.data.length;
+        }
 
         res.validate();
 

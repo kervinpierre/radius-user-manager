@@ -9,6 +9,8 @@
 <c:url value="/api/admin/update-radcheck" var="updateUrl" />
 <c:url value="/api/admin/delete-radcheck" var="destroyUrl" />
 
+<c:url value="/api/admin/read-all-radcheck-usernames" var="userNameUrl" />
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,7 +23,8 @@
         </div>
 
     <div>
-        <kendo:grid name="grid" pageable="true" sortable="true" height="900px" >
+        <kendo:grid name="grid" pageable="true" sortable="true" height="900px"
+                        filterable="true">
             <kendo:grid-editable mode="inline"  confirmation="handle_confirmation"
                                  confirmDelete="confirmDelete"  cancelDelete="cancelDelete">
             </kendo:grid-editable>
@@ -60,6 +63,21 @@
                         <kendo:dataSource-schema-model-fields>
 
                             <kendo:dataSource-schema-model-field name="username" type="string">
+                                <kendo:grid-column-filterable>
+                                    <kendo:grid-column-filterable-ui>
+                                        <script>
+                                            function userNameFilter(element) {
+                                                element.kendoAutoComplete({
+                                                    dataSource: {
+                                                        transport: {
+                                                            read: "${userNameUrl}"
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        </script>
+                                    </kendo:grid-column-filterable-ui>
+                                </kendo:grid-column-filterable>
                             </kendo:dataSource-schema-model-field>
 
                             <kendo:dataSource-schema-model-field name="attribute" type="string">

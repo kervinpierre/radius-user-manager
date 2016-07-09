@@ -8,6 +8,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,17 +43,29 @@ public class RUMRadCheckServiceImpl implements RUMRadCheckService
         return radCheckRepository.getOne(id);
     }
 
+    @Override
+    public List<RUMRadCheck> findAllRadChecks()
+    {
+        return  radCheckRepository.findAll();
+    }
+
+    @Override
+    public Page<RUMRadCheck> findAllRadChecks(Pageable pageable)
+    {
+        return  radCheckRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<RUMRadCheck> findAllRadChecks(Specification<RUMRadCheck> spec, Pageable pageable)
+    {
+        return  radCheckRepository.findAll(spec, pageable);
+    }
+
 //    @Override
 //    public RUMRadCheck validateCredential(String username, String password)
 //    {
 //        return radCheckRepository.findByUsernameAndPassword(username, password);
 //    }
-
-    @Override
-    public List<RUMRadCheck> findAllRadCheck()
-    {
-        return radCheckRepository.findAll();
-    }
 
     @Override
     public RUMRadCheck createRadCheck(final Map<String, Object> model) throws RUMException
@@ -76,6 +91,12 @@ public class RUMRadCheckServiceImpl implements RUMRadCheckService
         updateRadCheck(res, model);
 
         return res;
+    }
+
+    @Override
+    public List<String> findAllUsernames()
+    {
+        return radCheckRepository.findAllUsernames();
     }
 
     public RUMRadCheck updateRadCheck(final Map<String, Object> model) throws RUMException
