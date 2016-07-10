@@ -1,4 +1,5 @@
 <c:url value='/login' var="loginUrl" />
+<c:url value='/prefs' var="prefsUrl" />
 
 <script>
     $(function () {
@@ -28,7 +29,7 @@
                 <kendo:menu name="Menu">
                     <kendo:menu-items>
 
-                        <kendo:menu-item text="Prefs"  url="/prefs/">
+                        <kendo:menu-item text="Prefs"  url="${prefsUrl}">
                         </kendo:menu-item>
 
                     </kendo:menu-items>

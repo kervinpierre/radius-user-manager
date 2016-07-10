@@ -4,6 +4,8 @@
 <%@ taglib prefix="kendo" uri="http://www.kendoui.com/jsp/tags"%>
 <%@ page session="true"%>
 
+<c:url value='/prefs' var="prefsUrl" />
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,6 +23,12 @@
                 var p1 = $("#P1").val();
                 var p2 = $("#P2").val();
 
+                if (/^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!&?+]).{8,32})$/.test(p1) == false)
+                {
+                    alert("Sorry password does not meet complexity requirements\nMust contains one digit from 0-9\nMust contains one lowercase characters\nMust contains one uppercase characters\nMust contains one special symbols in the list '@#$%!&?+'\nLength at least 8 characters and maximum of 32");
+                    return;
+                }
+
                 if( p1 != p2 ) {
                     alert("Sorry password confirmation does not match");
                     return false;
@@ -35,13 +43,13 @@
                 <li>Must contains one digit from 0-9</li>
                 <li>Must contains one lowercase characters</li>
                 <li>Must contains one uppercase characters</li>
-                <li>Must contains one special symbols in the list "@#$%!"</li>
+                <li>Must contains one special symbols in the list "@#$%!&?+"</li>
                 <li>Length at least 8 characters and maximum of 32</li>
             </ul>
         </div>
 
     <div>
-        <form method="POST" action="/prefs" onsubmit="return validateForm()">
+        <form method="POST" action="${prefsUrl}" onsubmit="return validateForm()">
             <div>Update Your Information</div>
             <div>
                 <div>

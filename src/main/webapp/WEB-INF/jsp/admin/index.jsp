@@ -36,6 +36,7 @@
                     .kendoGrid({
                         "toolbar": [{"name": "create"}],
                         "filterable": true,
+                        "resizable" : true,
                         "editable": {
                             "mode": "inline",
                            // "cancelDelete": "cancelDelete",
@@ -86,9 +87,9 @@
                                                         return;
                                                     }
 
-                                                    if (/^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!]).{8,32})$/.test(p1) == false)
+                                                    if (/^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!&?+]).{8,32})$/.test(p1) == false)
                                                     {
-                                                        alert("Sorry password does not meet complexity requirements\nMust contains one digit from 0-9\nMust contains one lowercase characters\nMust contains one uppercase characters\nMust contains one special symbols in the list '@#$%!'\nLength at least 8 characters and maximum of 32");
+                                                        alert("Sorry password does not meet complexity requirements\nMust contains one digit from 0-9\nMust contains one lowercase characters\nMust contains one uppercase characters\nMust contains one special symbols in the list '@#$%!&?+'\nLength at least 8 characters and maximum of 32");
                                                         return;
                                                     }
 
@@ -115,7 +116,7 @@
                                             });
                                 }
                             }]
-                        }, {"field": "id", "width": "120px", "title": "ID"}, {
+                        }, {"field": "id", "width": "140px", "title": "ID"}, {
                             "filterable": {
                                 "ui": function userNameFilter(element)
                                 {
@@ -127,8 +128,8 @@
                                         }
                                     });
                                 }
-                            }, "field": "username", "width": "120px", "title": "Username"
-                        }, {"field": "email", "width": "120px", "title": "Email"}, {
+                            }, "field": "username", "width": "140px", "title": "Username"
+                        }, {"field": "email", "width": "140px", "title": "Email"}, {
                             "filterable": {
                                 "ui": function firstNameFilter(element)
                                 {
@@ -140,7 +141,7 @@
                                         }
                                     });
                                 }
-                            }, "field": "firstName", "width": "120px", "title": "First Name"
+                            }, "field": "firstName", "width": "140px", "title": "First Name"
                         }, {
                             "filterable": {
                                 "ui": function lastNameFilter(element)
@@ -153,44 +154,44 @@
                                         }
                                     });
                                 }
-                            }, "field": "lastName", "width": "120px", "title": "Last Name"
-                        }, {"field": "mainGroup", "width": "120px", "title": "Group"}, {
+                            }, "field": "lastName", "width": "140px", "title": "Last Name"
+                        }, {"field": "mainGroup", "width": "140px", "title": "Group"}, {
                             "field": "status",
-                            "width": "120px",
+                            "width": "140px",
                             "title": "Status"
-                        }, {"field": "enabled", "width": "120px", "title": "Enabled"}, {
+                        }, {"field": "enabled", "width": "140px", "title": "Enabled"}, {
                             "field": "radiusEnabled",
-                            "width": "120px",
+                            "width": "140px",
                             "title": "Radius Enabled"
-                        }, {"field": "canLogin", "width": "120px", "title": "Can Login"}, {
+                        }, {"field": "canLogin", "width": "140px", "title": "Can Login"}, {
                             "field": "locked",
-                            "width": "120px",
+                            "width": "140px",
                             "title": "Is Locked"
                         }, {
                             "field": "accountNonLocked",
-                            "width": "120px",
+                            "width": "140px",
                             "title": "Acc. Non-Locked"
                         }, {
                             "field": "accountNonExpired",
-                            "width": "120px",
+                            "width": "140px",
                             "title": "Acc. Non-Expired"
                         }, {
                             "field": "accountExpired",
-                            "width": "120px",
+                            "width": "140px",
                             "title": "Acc. Expired"
                         }, {
                             "field": "credentialsNonExpired",
-                            "width": "120px",
+                            "width": "140px",
                             "title": "Cred. Non-Expired"
                         }, {
                             "field": "credentialsExpired",
-                            "width": "120px",
+                            "width": "140px",
                             "title": "Cred. Expired"
-                        }, {"field": "lastSeen", "width": "120px", "title": "Last Seen"}, {
+                        }, {"field": "lastSeen", "width": "140px", "title": "Last Seen"}, {
                             "field": "createdDate",
-                            "width": "120px",
+                            "width": "140px",
                             "title": "Created"
-                        }, {"field": "lastModified", "width": "120px", "title": "Last Modified"}],
+                        }, {"field": "lastModified", "width": "140px", "title": "Last Modified"}],
                         "pageable": true,
                         "sortable": true,
                         "dataSource": {

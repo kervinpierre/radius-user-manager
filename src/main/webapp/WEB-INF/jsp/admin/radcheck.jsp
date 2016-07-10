@@ -24,7 +24,7 @@
 
     <div>
         <kendo:grid name="grid" pageable="true" sortable="true" height="900px"
-                        filterable="true">
+                        filterable="true" resizable="true">
             <kendo:grid-editable mode="inline"  confirmation="handle_confirmation"
                                  confirmDelete="confirmDelete"  cancelDelete="cancelDelete">
             </kendo:grid-editable>
@@ -38,11 +38,29 @@
                         <kendo:grid-column-commandItem name="destroy" text="Delete"  />
                     </kendo:grid-column-command>
                 </kendo:grid-column>
-                <kendo:grid-column title="ID" field="id"  width="120px" />
-                <kendo:grid-column title="Username" field="username" width="120px" />
+                <kendo:grid-column title="ID" field="id"  width="40px" />
+
+                <kendo:grid-column title="Username" field="username" width="120px">
+                    <kendo:grid-column-filterable>
+                        <kendo:grid-column-filterable-ui>
+                            <script>
+                                function userNameFilter(element) {
+                                    element.kendoAutoComplete({
+                                        dataSource: {
+                                            transport: {
+                                                read: "${userNameUrl}"
+                                            }
+                                        }
+                                    });
+                                }
+                            </script>
+                        </kendo:grid-column-filterable-ui>
+                    </kendo:grid-column-filterable>
+                </kendo:grid-column>
+
                 <kendo:grid-column title="Attribute" field="attribute" width="120px"/>
-                <kendo:grid-column title="Operation" field="op" width="120px"/>
-                <kendo:grid-column title="Value" field="value" width="120px"/>
+                <kendo:grid-column title="Operation" field="op" width="40px"/>
+                <kendo:grid-column title="Value" field="value" width="150px"/>
             </kendo:grid-columns>
             <kendo:dataSource  pageSize="5" serverPaging="true" serverSorting="true" serverFiltering="true" serverGrouping="true">
                 <kendo:dataSource-transport>
@@ -63,21 +81,6 @@
                         <kendo:dataSource-schema-model-fields>
 
                             <kendo:dataSource-schema-model-field name="username" type="string">
-                                <kendo:grid-column-filterable>
-                                    <kendo:grid-column-filterable-ui>
-                                        <script>
-                                            function userNameFilter(element) {
-                                                element.kendoAutoComplete({
-                                                    dataSource: {
-                                                        transport: {
-                                                            read: "${userNameUrl}"
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        </script>
-                                    </kendo:grid-column-filterable-ui>
-                                </kendo:grid-column-filterable>
                             </kendo:dataSource-schema-model-field>
 
                             <kendo:dataSource-schema-model-field name="attribute" type="string">
